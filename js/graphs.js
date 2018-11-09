@@ -1,7 +1,7 @@
 
 
 var q = d3.queue();
-q.defer(d3.csv, "http://127.0.0.1:4000/data/data.csv")
+q.defer(d3.csv, "https://josephwibowo.github.io/data/data.csv")
 // q.defer(d3.json, "/words");
 q.await(makeGraphs);
 dc.config.defaultColors("schemeCategory10")
@@ -79,7 +79,7 @@ function makeGraphs(error, recordsJson, wordsJson) {
     //           .text(function(d) { return d.key; });
     //     }
     // d3.layout.cloud().stop();
-    
+
     //GRAPHS
     var date = new Date()
     var dateFormat = d3.timeFormat("%Y-%m-%d %H:%M:%S");
