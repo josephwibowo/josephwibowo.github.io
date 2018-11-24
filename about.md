@@ -4,12 +4,8 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
-
-### More Information
-
-A place to include any other types of information that you'd like to include about yourself.
+Hello, my name is Joseph Wibowo. I am currently based in the bay area as a data engineer and am constantly trying to expand my skillset. This blog will showcase projects I have worked on and the learnings that came with them. I hope you enjoy reading through it.
 
 ### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+Find me on LinkedIn: [https://www.linkedin.com/in/josephwibowo/](https://www.linkedin.com/in/josephwibowo/)
