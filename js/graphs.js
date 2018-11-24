@@ -1,84 +1,61 @@
 
 
 var q = d3.queue();
+// q.defer(d3.csv, "http://127.0.0.1:4000/data/data.csv")
 q.defer(d3.csv, "https://josephwibowo.github.io/data/data.csv")
-// q.defer(d3.json, "/words");
 q.await(makeGraphs);
 dc.config.defaultColors("schemeCategory10")
 
+var stopwords = ['the', 'and', 'in', 'for', 'at', 'to', 'on', 'a', 'an', 'of', 'with', 'by', 'its', 'can', 'be', 'it',
+                 'too', 'are', 'day', 'as', 'my', 'your', 'how'];
 
-function reduceAddAvg(attr) {
-  return function(p,v) {
-      ++p.count
-      p.link = v.link
-      p.group = v.group_name
-      p.sums += v[attr];
-      p.averages = (p.count === 0) ? 0 : p.sums/p.count; // gaurd against dividing by zero
-    return p;
-  };
-}
-function reduceRemoveAvg(attr) {
-  return function(p,v) {
-      --p.count
-      p.sums -= v[attr];
-      p.averages = (p.count === 0) ? 0 : p.sums/p.count;
-    return p;
-  };
-}
-function reduceInitAvg() {
-  return {count:0, sums:0, averages:0};
-}
+function makeGraphs(error, records) {
 
-function makeGraphs(error, recordsJson, wordsJson) {
-    // //wordcloud
-    // var word_counts = {};
-    // wordsJson.forEach(function(word) {
-    //     word_counts[word] = word_counts.hasOwnProperty(word) ? word_counts[word] + 1 : 1;
-    // });
-    // keysSorted = Object.keys(word_counts).sort(function(a,b){return word_counts[b]-word_counts[a]}).slice(0,50);
-    // var top_50_counts = {};
-    // keysSorted.forEach(function(word) {
-    //     top_50_counts[word] = word_counts[word];
-    // });
-    // word_entries = d3.entries(top_50_counts)
-    // var svg_location = "#wordcloud";
-    // var width = 600;
-    // var height = 400;
-    // var fill = d3.scaleOrdinal(d3.schemeCategory20);
-    // var xScale = d3.scaleLinear()
-    //        .domain([0, d3.max(word_entries, function(d) {
-    //           return d.value;
-    //         })
-    //        ])
-    //        .range([10,100]);
-    // d3.layout.cloud().size([width, height])
-    //       .timeInterval(20)
-    //       .words(word_entries)
-    //       .fontSize(function(d) { return xScale(+d.value); })
-    //       .text(function(d) { return d.key; })
-    //       .rotate(function() { return ~~(Math.random() * 2) * 90; })
-    //       .font("Impact")
-    //       .on("end", draw)
-    //       .start();
-    // function draw(words) {
-    //       d3.select(svg_location).append("svg")
-    //           .attr("width", width)
-    //           .attr("height", height)
-    //         .append("g")
-    //           .attr("transform", "translate(" + [width >> 1, height >> 1] + ")")
-    //         .selectAll("text")
-    //           .data(words)
-    //         .enter().append("text")
-    //           .style("font-size", function(d) { return xScale(d.value) + "px"; })
-    //           .style("font-family", "Impact")
-    //           .style("fill", function(d, i) { return fill(i); })
-    //           .attr("text-anchor", "middle")
-    //           .attr("transform", function(d) {
-    //             return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-    //           })
-    //           .text(function(d) { return d.key; });
-    //     }
-    // d3.layout.cloud().stop();
+    // Filter Functions for filtering out blank venue names
+    function remove_empty_keys(source_group) {
+        function not_blank(d) {
+            return d.key !== "";
+        }
+        var bins = Array.prototype.slice.call(arguments, 1);
+        return {
+            all:function () {
+                return source_group.all().filter(function(d) {
+                    return bins.indexOf(d.key) !== "";
+                });
+            },
+            top: function(n) {
+                return source_group.top(Infinity)
+                    .filter(not_blank)
+                    .slice(0, n);
+            }
+        };
+    }
+
+    function isPositiveInteger(n) {
+        return n >>> 0 === parseFloat(n);
+    }
+
+    function reduceAddAvg(attr) {
+      return function(p,v) {
+          ++p.count
+          p.link = v.link
+          p.group = v.group_name
+          p.sums += v[attr];
+          p.averages = (p.count === 0) ? 0 : p.sums/p.count; // guard against dividing by zero
+        return p;
+      };
+    }
+    function reduceRemoveAvg(attr) {
+      return function(p,v) {
+          --p.count
+          p.sums -= v[attr];
+          p.averages = (p.count === 0) ? 0 : p.sums/p.count;
+        return p;
+      };
+    }
+    function reduceInitAvg() {
+      return {count:0, sums:0, averages:0};
+    }
 
     //GRAPHS
     var date = new Date()
@@ -86,7 +63,7 @@ function makeGraphs(error, recordsJson, wordsJson) {
     var dateFormatParser = d3.timeParse("%Y-%m-%d %H:%M:%S");
 
     //DATA RECORDS
-    var records = recordsJson;
+    var records = records;
     records.forEach(function(d) {
         d["event_datetime"] = dateFormatParser(d["event_datetime"]);
         d["event_datetime"].setMinutes(0);
@@ -99,196 +76,55 @@ function makeGraphs(error, recordsJson, wordsJson) {
 
     //DIMENSIONS
     var allDim = ndx.dimension(function(d) {return d;});
-//    var groupDim = ndx.dimension(function(d) { return d["group_name"]; });
     var groupDim = ndx.dimension(function(d) { return d["group_name"] });
+    var eventDim = ndx.dimension(function(d) { return d["event_name"] });
+    var venueDim = ndx.dimension(function(d) { return d["name"] });
 
     //GROUPS
     var groupGroup = groupDim.group();
+    var venueGroup = venueDim.group();
+    venueGroup = remove_empty_keys(venueGroup);
+    var eventGroup = eventDim.group().reduceSum(function (d) {
+        return d.yes_rsvp_count;
+    });
     var rsvpByGroup = groupDim.group()
-                          .reduce(reduceAddAvg('yes_rsvp_count'), reduceRemoveAvg('yes_rsvp_count'), reduceInitAvg);
+        .reduce(reduceAddAvg('yes_rsvp_count'), reduceRemoveAvg('yes_rsvp_count'), reduceInitAvg);
 
-    // CHARTS
-    // Most events per group
-    var groupChart = dc.rowChart("#group-bar-chart");
-    groupChart
-        .width(350)
-        .height(600)
-        .dimension(groupDim)
-        .group(groupGroup)
-        .data(function (d) {
-            return d.top(10);
-        })
-        .ordering(function(d) { return -d.value })
-        .colors(['#6baed6'])
-        .elasticX(true)
-        .xAxis().ticks(4);
+    
+    // ---------- ALL CHARTS --------------
 
-    // Manual attendance coutn
-    function reduceAdd(p, v) {
-        ++p.event_count
-        p.rsvps += v['yes_rsvp_count'];
-        p.avg_rsvp = (p.event_count === 0) ? 0 : p.rsvps/p.event_count;
-        p.attn_count += (v['attendance_count'] === 0) ? null: v['attendance_count']
-        p.rsvp_count += (v['attendance_count'] === 0) ? null: v['yes_rsvp_count']
-        p.attendance_rate = p.attn_count / p.rsvp_count
-        return p
-    }
-    function reduceRemove(p, v) {
-        --p.event_count
-        p.rsvps -= v['yes_rsvp_count'];
-        p.avg_rsvp = (p.event_count === 0) ? 0 : p.rsvps/p.event_count;
-        p.attn_count -= (v['attendance_count'] === 0) ? null: v['attendance_count']
-        p.rsvp_count -= (v['attendance_count'] === 0) ? null: v['yes_rsvp_count']
-        p.attendance_rate = p.attn_count / p.rsvp_count
-        return p;
-    }
-    function reduceInitial() {
-        return {
-            event_count: 0,
-            attn_count: 0,
-            rsvp_count: 0,
-            avg_rsvp: 0,
-            attendance_rate: 0,
-            rsvps: 0
-        };
-    }
-    var grpGroup = groupDim.group().reduce(reduceAdd, reduceRemove, reduceInitial)
-    function filter_sort_cap_bins(source_group) {
-      return {
-        all:function () {
-          return source_group
-            .all()
-            .filter(d => !isNaN(d.value.attendance_rate))
-            .sort((a,b) => b.value.attendance_rate - a.value.attendance_rate)
-            .slice(0, 10);
-        }
-      };
-    }
-    var fakeGroup = filter_sort_cap_bins(grpGroup);
-    var test = dc.barChart('#asdf')
-                 .width(600)
-                 .height(350)
-                 .x(d3.scaleBand())
-                 .xUnits(dc.units.ordinal)
-                 .dimension(groupDim)
-                 .group(fakeGroup)
-                 .ordering(function(d) { return -d.attendance_rate; })
-                 .valueAccessor(function (d) {
-                    return d.value.attendance_rate;
-                })
-//    var moveChart = dc.compositeChart("#group-chart");
-//    moveChart.width(600)
-//            .height(300)
-//            .transitionDuration(1000)
-//            .margins({top: 30, right: 50, bottom: 25, left: 60})
-//            .dimension(groupDim)
-////            .mouseZoomable(true)
-//            .shareTitle(false)
-//            .elasticY(true)
-//            .renderHorizontalGridLines(true)
-//            .legend(dc.legend().x(70).y(10).itemHeight(13).gap(5))
-//            .brushOn(false)
-//            .compose([
-//                dc.lineChart(moveChart)
-//                        .group(eventGroup, "Event Count")
-//                        .valueAccessor(function (d) {
-//                            return d.value.event_count;
-//                        }),
-//                dc.lineChart(moveChart)
-//                        .group(eventGroup, "Attendance Rate")
-//                        .valueAccessor(function (d) {
-//                            return d.value.attendance_rate;
-//                        })
-////                        .title(function (d) {
-////                            var value = d.value.avg ? d.value.avg : d.value;
-////                            if (isNaN(value)) value = 0;
-////                            return dateFormat(d.key) + "\n" + numberFormat(value);
-////                        })
-//                        .ordinalColors(["orange"])
-//                        .useRightYAxis(true)
-//            ])
-//            .yAxisLabel("Monthly Index Average")
-//            .rightYAxisLabel("Monthly Index Move")
-//            .renderHorizontalGridLines(true);
-
-    var groupTable = dc_datatables.datatable('.dc-data-table');
-    groupTable
-        .dimension(rsvpByGroup)
-        // Data table does not use crossfilter group but rather a closure
-        // as a grouping function
-        .group(function (d) {
-            return "asdf";
-        })
-        .size(10)
-        .columns([
-            {
-                label: 'group',
-                format: function(d) {
-                    return "<a target='_' href=" + d.value.link + ">" + d.value.group + "</a>";
-                }
-            },
-            {
-                label: 'rsvps',
-                format: function(d) {
-                    return d.value.sums;
-                }
-            },
-            {
-                label: 'avg',
-                format: function(d) {
-                    return d.value.averages;
-                }
-            }
-        ])
-        .order(d3.descending)
-        // (_optional_) custom renderlet to post-process chart using [D3](http://d3js.org)
-        .on('renderlet', function (table) {
-            table.selectAll('.dc-data-table').classed('info', true);
-        });
-    // Most attended per group
-//    var rsvpChart = dc.rowChart("#rsvp-bar-chart");
-//    rsvpChart
-//        .width(350)
-//        .height(600)
-//        .dimension(groupDim)
-//        .group(rsvpByGroup)
-//        .data(function (d) {
-//            return d.top(10);
-//        })
-//        .ordering(function(d) { return -d.value.averages })
-//        .valueAccessor(function (p) {
-//            return p.value.averages;
-//        })
-//        .colors(['#6baed6'])
-//        .elasticX(true)
-//        .xAxis().ticks(4);
-    // Time
-    var dateDim = ndx.dimension(function(d) { return d["event_datetime"]; });
-    var dayGroup = dateDim.group();
+    // Events over Time Chart
+    var monthDim = ndx.dimension(function(d) { return d3.timeMonth(d["event_datetime"]); });
+    var monthGroup = monthDim.group();
     var timeChart = dc.barChart("#time-chart");
     var timeRangeChart = dc.barChart("#time-range-chart");
     timeChart
-        .width(680)
-        .height(240)
-        .margins({top: 10, right: 50, bottom: 20, left: 20})
-        .dimension(dateDim)
+        .width(550)
+        .height(350)
+        .margins({top: 10, right: 20, bottom: 25, left: 40})
+        .dimension(monthDim)
         .brushOn(false)
-        .group(dayGroup)
+        .centerBar(true)
+        .gap(3)
+        .group(monthGroup)
         .transitionDuration(500)
         .rangeChart(timeRangeChart)
-        .x(d3.scaleTime().domain([new Date(date.getFullYear(), 0, 1), date]))
+        .xUnits(d3.timeMonths)
+        .yAxisLabel("Count of Events")
+        .x(d3.scaleTime().domain([new Date(2008, 0, 1), date]))
         .elasticY(true)
-        .yAxis().ticks(4);
-    // Time Range
-    timeRangeChart.width(680)
-        .height(40)
+        .yAxis().ticks(3);
+    timeRangeChart.width(560)
+        .height(100)
         .margins({top: 0, right: 50, bottom: 20, left: 40})
-        .dimension(dateDim)
+        .dimension(monthDim)
         .brushOn(true)
-        .group(dayGroup)
-        .x(d3.scaleTime().domain([new Date(2008, 0, 1), date]));
-    //MAP
-
+        .group(monthGroup)
+        .x(d3.scaleTime().domain([new Date(2008, 0, 1), date]))
+        .elasticY(true)
+        .yAxis().ticks(3);
+   
+    // Heatmap Chart
     var map = L.map('map');
     var drawMap = function(){
 
@@ -306,44 +142,228 @@ function makeGraphs(error, recordsJson, wordsJson) {
             geoData.push([d["latitude"], d["longitude"], 1]);
         });
         var heat = L.heatLayer(geoData,{
-            radius: 10,
-            blur: 20,
+            radius: 7,
+            blur: 13,
             maxZoom: 1,
         }).addTo(map);
-
     };
 
+    // event tooltip
+    var formatTime = d3.timeFormat("%Y-%B");
+    var rowtip = d3.tip()
+        .attr("class", "d3-tip")
+        .offset([-8, 0])
+        .html(function(d) { return formatTime(d.x) + ': ' + d.y; });
+    timeChart.on('pretransition.add-tip', function(chart) {
+    chart.selectAll('rect.bar')
+        .call(rowtip)
+        .on('mouseover', rowtip.show)
+        .on('mouseout', rowtip.hide);
+    });
 
-    // FILTER
-    dcCharts = [groupChart, timeChart, test];
+    // Most events per group
+    var groupChart = dc.rowChart("#group-bar-chart");
+    groupChart
+        .width(400)
+        .height(400)
+        .dimension(groupDim)
+        .group(groupGroup)
+        .data(function (d) {
+            return d.top(10);
+        })
+        .ordering(function(d) { return -d.value })
+        .colors(['#6baed6'])
+        .elasticX(true)
+        .xAxis().ticks(4);
+
+    // Most RSVPs for Event
+    var topeventsChart = dc.rowChart("#event-bar-chart");
+    topeventsChart
+        .width(400)
+        .height(400)
+        .dimension(eventDim)
+        .group(eventGroup)
+        .data(function (d) {
+            return d.top(10);
+        })
+        .ordering(function(d) { return -d.value })
+        .colors(['#6baed6'])
+        .elasticX(true)
+        .xAxis().ticks(6);
+
+    // Most Events per Venue
+    var topVenuesChart = dc.rowChart("#venue-bar-chart");
+    topVenuesChart
+        .width(400)
+        .height(400)
+        .dimension(venueDim)
+        .group(venueGroup)
+        .data(function (d) {
+            return d.top(10);
+        })
+        .ordering(function(d) { return -d.value })
+        .colors(['#6baed6'])
+        .elasticX(true)
+        .xAxis().ticks(6);
+
+    // Word Cloud
+    var svg_location = "#wordcloud";
+    var width = 500;
+    var height = 400;
+    var svg = d3.select(svg_location)
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(" + [width >> 1, height >> 1] + ")");
+
+    // Create words from event names from filtered dataset            
+    var getWords = function() {
+        names = [];
+        words = [];
+        _.each(allDim.top(Infinity), function (d) {
+            names.push(d["event_name"]);
+        });
+
+        // Clean event names and split names into words
+        names.forEach(function(name) {
+            var n = name.toLowerCase();
+            n = n.replace(/((?:^|\W)san)\s|((?:^|\W)de)\s|((?:^|\W)los)\s/, '$1$2$3_');
+            n = n.replace(/[^0-9a-zA-Z\s_]+/, '');
+            n = n.replace(/[0-9]+(pm|am|th)/, '').trim();
+            n.split(' ').forEach(function(word) {
+                if (!stopwords.includes(word) && word.length > 1 && !isPositiveInteger(word)) {
+                    words.push(word)
+                };
+            });
+        });
+
+        // Generate counts for each word
+        var word_counts = {};
+        words.forEach(function(word) {
+            word_counts[word] = word_counts.hasOwnProperty(word) ? word_counts[word] + 1 : 1;
+        });
+        keysSorted = Object.keys(word_counts).sort(function(a,b){return word_counts[b]-word_counts[a]}).slice(0,50);
+        var top_50_counts = {};
+        keysSorted.forEach(function(word) {
+            top_50_counts[word] = word_counts[word];
+        });
+        word_entries = d3.entries(top_50_counts)
+
+        return word_entries;
+    }
+
+    function updateWords() {
+        var word_entries = getWords();
+        var xScale = d3.scaleLinear()
+            .domain([0, d3.max(word_entries, function(d) {
+                return d.value;
+            })])
+            .range([10,100]);
+        d3.layout.cloud().size([width, height])
+            .timeInterval(20)
+            .words(word_entries)
+            .fontSize(function(d) { return xScale(+d.value); })
+            .text(function(d) { return d.key; })
+            .rotate(function() { return ~~(Math.random() * 2) * 90; })
+            .font("Impact")
+            .on("end", draw)
+            .start();
+    };
+
+    function draw(words) {
+        var fill = d3.scaleOrdinal(d3.schemeCategory20);
+        var xScale = d3.scaleLinear()
+                       .domain([0, d3.max(words, function(d) {
+                            return d.value;
+                        })])
+                       .range([10,100]);
+        svg.selectAll("*").remove(); // Remove all text elemtns
+        var selectVis = svg.selectAll("text")
+            .data(words);
+        
+        selectVis.enter().append("text")
+            .style("font-size", function(d) { return xScale(d.value) + "px"; })
+            .style("font-family", "Impact")
+            .style("fill", function(d, i) { return fill(i); })
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .text(function(d) { return d.key; });
+    };
+
+    // DATA TABLES
+    var groupTable = dc_datatables.datatable('#groups-data-table');
+    groupTable
+        .dimension(rsvpByGroup)
+        // Data table does not use crossfilter group but rather a closure
+        // as a grouping function. This is a dummy group to initialize it.
+        .group(function (d) {
+            return "";
+        })
+        .size(10)
+        .columns([
+            {
+                label: 'Group Name',
+                format: function(d) {
+                    return "<a target='_' href=" + d.value.link + ">" + d.value.group + "</a>";
+                }
+            },
+            {
+                label: 'Total RSVPs',
+                format: function(d) {
+                    return d3.format(',')(d.value.sums);
+                }
+            },
+            {
+                label: 'Total Events',
+                format: function(d) {
+                    return d3.format(',')(d.value.count);
+                }
+            },
+            {
+                label: 'Average RSVPs/Event',
+                format: function(d) {
+                    return d3.format(',.2f')(d.value.averages);
+                }
+            }
+        ])
+        .order(d3.descending)
+        .on('renderlet', function (table) {
+            table.selectAll('#groups-data-table').classed('info', true);
+        });
+
+
+    // UPDATE MAP/WORDCLOUD ON FILTER
+    dcCharts = [groupChart, timeChart, topeventsChart, topVenuesChart];
     _.each(dcCharts, function (dcChart) {
         dcChart.on("filtered", function (chart, filter) {
             map.eachLayer(function (layer) {
                 map.removeLayer(layer)
             });
         drawMap();
+        updateWords();
         });
     });
 
-    // RENDER ALL CHARTS
+    // INIT/RENDER ALL CHARTS
+    var word_entries = getWords();
+    xScale = d3.scaleLinear()
+        .domain([0, d3.max(word_entries, function(d) {
+            return d.value;
+        })])
+        .range([10,100]);
+    d3.layout.cloud().size([width, height])
+        .timeInterval(20)
+        .words(word_entries)
+        .fontSize(function(d) { return xScale(+d.value); })
+        .text(function(d) { return d.key; })
+        .rotate(function() { return ~~(Math.random() * 2) * 90; })
+        .font("Impact")
+        .on("end", draw)
+        .start();
     drawMap();
     dc.renderAll();
     groupTable.dt().order([ 1, 'desc' ]).draw()
-
-
-    // ON CHANGE
-//    d3.select('#startYear').on('change', function() {
-//        startYear = this.value;
-//        minDate = new Date(this.value, 0, 1, 0, 0, 0);
-//        maxDate = new Date(endYear, 11, 31, 23, 59, 59);
-//        timeChart.x(d3.scaleTime().domain([minDate, maxDate]))
-//        dc.redrawAll();
-//    });
-//    d3.select('#endYear').on('change', function() {
-//        endYear = this.value;
-//        minDate = new Date(startYear, 0, 1, 0, 0, 0);
-//        maxDate = new Date(this.value, 11, 31, 23, 59, 59);
-//        timeChart.x(d3.scaleTime().domain([minDate, maxDate]))
-//        timeChart.redrawGroup();
-//    });
 };

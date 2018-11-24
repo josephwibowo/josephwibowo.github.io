@@ -1,27 +1,39 @@
 <div class="container-fluid">
 	<div class="row">
-        <div class="col">
-			<div id="time-chart"></div>
-		</div>
-	</div>
-	<div class="row">
-        <div class="col">
+        <div class="col-6">
+        	<h5>Events over Time (filter with bottom chart)</h5>
+			<div id="time-chart">
+			</div>
 			<div id="time-range-chart"></div>
 		</div>
-	</div>
-	<div class="row">
-        <div class="col">
-			<div id="map" style="height:500px;"></div>
+		<div class="col-6">
+			<h5>Heatmap of Events</h5>
+			<div id="map" style="height:490px;"></div>
 		</div>
 	</div>
 	<div class="row">
-        <div class="col">
+        <div class="col-4">
+        	<h5>Top 10 Groups with Most Events</h5>
 			<div id="group-bar-chart"></div>
 		</div>
+		<div class="col-4">
+			<h5>Top 10 Events with Most RSVPs</h5>
+			<div id="event-bar-chart"></div>
+		</div>
+		<div class="col-4">
+			<h5>Top 10 Venues with Most Events</h5>
+			<div id="venue-bar-chart"></div>
+		</div>
 	</div>
 	<div class="row">
-        <div class="col">
-			<table class="dc-data-table"></table>
+		<div class="col-6">
+			<h5>Event Name Wordcloud</h5>
+            <div id="wordcloud"></div>
+            <img class="img-thumbnail" style="margin-top: 80px;" src="{{ site.baseurl }}/images/meetup.svg"/>     
+        </div>
+        <div class="col-6">
+        	<h5>Groups Table</h5>
+			<table id="groups-data-table" class="table table-striped table-bordered table-font" width="100%"></table>
 		</div>
 	</div>
 </div>

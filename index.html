@@ -2,17 +2,28 @@
 layout: default
 ---
 
-<div class="posts">
+<div class="container-fluid">
   {% for post in site.posts %}
-    <article class="post">
+  	{% if post.exclude == false %}
+  		<div class="row">
+  			<div class="col-sm-4">
+			    <article class="post">
+			      <h6 style="text-align: center;"><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h6>
 
-      <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h1>
+			      <div class="entry">
+			        {{ post.excerpt }}
+			      </div>
 
-      <div class="entry">
-        {{ post.excerpt }}
-      </div>
-
-      <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
-    </article>
+			      <div class="tags">
+			      	Tags: <button type="button" class="btn btn-primary btn-xs">Airflow</button>
+			      	<button type="button" class="btn btn-primary btn-xs">ETL</button>
+			      	<button type="button" class="btn btn-primary btn-xs">Python</button>
+			      	<button type="button" class="btn btn-primary btn-xs">d3.js</button>
+			      	<button type="button" class="btn btn-primary btn-xs">Docker</button>
+			      </div>
+			    </article>
+		    </div>
+		</div>
+	{% endif %}
   {% endfor %}
 </div>
