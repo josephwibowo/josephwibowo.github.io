@@ -3,27 +3,35 @@ layout: default
 ---
 
 <div class="container-fluid">
-  {% for post in site.posts %}
-  	{% if post.exclude == false %}
-  		<div class="row">
-  			<div class="col-sm-4">
-			    <article class="post">
-			      <h6 style="text-align: center;"><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h6>
+	<div class="row">
+		{% for post in site.posts %}
+			{% if post.exclude == false %}
+			<div class="col-sm-4">
+				<article class="post">
+					<h6 style="text-align: center;"><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h6>
 
-			      <div class="entry">
-			        {{ post.excerpt }}
-			      </div>
-
-			      <div class="tags">
-			      	Tags: <button type="button" class="btn btn-primary btn-xs">Airflow</button>
-			      	<button type="button" class="btn btn-primary btn-xs">ETL</button>
-			      	<button type="button" class="btn btn-primary btn-xs">Python</button>
-			      	<button type="button" class="btn btn-primary btn-xs">d3.js</button>
-			      	<button type="button" class="btn btn-primary btn-xs">Docker</button>
-			      </div>
-			    </article>
-		    </div>
-		</div>
-	{% endif %}
-  {% endfor %}
+					<div class="entry">
+					{{ post.excerpt }}
+					</div>
+					
+					{% if post.title == "Meetup.com Data Engineering Project" %}
+					<div class="tags">
+						Tags: <button type="button" class="btn btn-primary btn-xs">Airflow</button>
+						<button type="button" class="btn btn-primary btn-xs">ETL</button>
+						<button type="button" class="btn btn-primary btn-xs">Python</button>
+						<button type="button" class="btn btn-primary btn-xs">d3.js</button>
+						<button type="button" class="btn btn-primary btn-xs">Docker</button>
+					</div>
+					{% elif post.title == "CloudyCam" %}
+					<div class="tags">
+						Tags: <button type="button" class="btn btn-primary btn-xs">Python</button>
+						<button type="button" class="btn btn-primary btn-xs">WebSockets</button>
+						<button type="button" class="btn btn-primary btn-xs">Streaming</button>
+					</div>
+					{% endif %}
+				</article>
+			</div>
+			{% endif %}
+		{% endfor %}
+	</div>
 </div>

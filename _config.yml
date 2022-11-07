@@ -6,7 +6,7 @@
 name: Joseph Wibowo's Portfolio
 
 # Short bio or description (displayed in the header)
-description: Data Engineer / Analyst / Enthusiast in the Bay Area
+description: Making Sense of the World through Data
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: https://raw.githubusercontent.com/josephwibowo/josephwibowo.github.io/master/images/logo.png
@@ -23,7 +23,7 @@ footer-links:
   flickr:
   github: josephwibowo/
   instagram:
-  linkedin: https://www.linkedin.com/in/josephwibowo
+  linkedin: josephwibowo
   pinterest:
   rss: # just type anything here for a working RSS icon
   twitter:
