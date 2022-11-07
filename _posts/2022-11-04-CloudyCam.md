@@ -7,8 +7,10 @@ exclude: false
 
 [![Dashboard Screenshot](/images/cloudycam.gif)]({{ site.baseurl }}{% link _posts/2022-11-04-CloudyCam.md %})
 {: style="border:1px solid gray;"}
-*Demo of CloudyCam*
+*CloudyCam is a Nest Camera Recorder in Python*
 {: style="color:gray; font-size: 80%; text-align: center;"}
+
+**All Credit goes to https://github.com/dend/foggycam who created the method to record Nest cameras in C#.**
 
 # Learnings
 
