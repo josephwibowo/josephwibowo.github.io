@@ -1,13 +1,13 @@
 ---
 layout: post
 comments: true
-title: Meetup.com Data Engineering Project
+title: MeetBaeArea 
 exclude: false
 ---
 
 [![Dashboard Screenshot](/images/dashboard-min.gif)]({{ site.baseurl }}{% link _posts/2018-11-24-Meetup_Analytics.md %})
 {: style="border:1px solid gray;"}
-*Meetup.com API Data Pipeline of Bay Area dating events & groups*
+*End-to-end analytics project of Meetup.com data*
 {: style="color:gray; font-size: 80%; text-align: center;"}
 
 # Objective
