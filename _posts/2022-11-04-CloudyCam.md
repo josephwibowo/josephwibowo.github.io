@@ -6,7 +6,7 @@ exclude: false
 ---
 
 [![Dashboard Screenshot](/images/cloudycam.gif)]({{ site.baseurl }}{% link _posts/2022-11-04-CloudyCam.md %})
-{: style="border:1px solid gray;"}
+{: style="text-align: center;"}
 *CloudyCam is a Nest Camera Recorder in Python*
 {: style="color:gray; font-size: 80%; text-align: center;"}
 
