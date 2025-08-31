@@ -293,3 +293,117 @@ footer {
 }
 
 // Note: All @use statements are now at the top of the file
+
+//
+// INDEX PAGE STYLES
+//
+
+.btn {
+    font-size: 9px !important;
+    padding: 2px !important;
+    line-height: 1.2 !important;
+}
+
+.post {
+  background: #fcfcfc;
+  font-size: 20px;
+  font-family: 'Source Serif Pro', serif;
+  color: $darkGray;
+  line-height: 1.5;
+}
+
+.post h1 {
+  font-family: $helveticaNeue;
+  color: $gray;
+  font-weight: bold;
+  line-height: 1.3;
+  margin: 1em 0 15px;
+  padding: 0;
+
+  @include mobile {
+    line-height: 1.4;
+  }
+}
+
+.post h3 {
+  font-family: $helveticaNeue;
+  color: $gray;
+  font-weight: bold;
+  line-height: 1.3;
+  margin: 1em 0 15px;
+  padding: 0;
+
+  @include mobile {
+    line-height: 1.4;
+  }
+}
+
+.post h2 {
+  font-family: $helveticaNeue;
+  color: $gray;
+  font-weight: bold;
+  line-height: 1.3;
+  margin: 1em 0 15px;
+  padding: 0;
+
+  @include mobile {
+    line-height: 1.4;
+  }
+}
+
+.post h6 {
+  font-family: $helveticaNeue;
+  color: $gray;
+  font-weight: bold;
+  line-height: 1.2;
+  padding: 0;
+
+  @include mobile {
+    line-height: 1.2;
+  }
+}
+
+/* Add vertical margin between post cards */
+.col-sm-4 {
+  margin-bottom: 2rem;
+  display: flex;
+}
+
+/* Add some padding inside each post card for better spacing */
+.post {
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.post:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Ensure post content fills available space */
+.post .entry {
+  flex-grow: 1;
+}
+
+/* Ensure consistent spacing for mobile */
+@media (max-width: 768px) {
+  .col-sm-4 {
+    margin-bottom: 1.5rem;
+  }
+  
+  .post {
+    padding: 1rem;
+  }
+}
+
+/* Responsive grid adjustments */
+@media (min-width: 992px) {
+  .col-sm-4 {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+  }
+}
