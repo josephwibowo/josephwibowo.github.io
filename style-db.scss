@@ -5,10 +5,9 @@
 // IMPORTS
 //
 
-@use "reset";
-@use "variables" as *;
-@use "highlights";
-@use "svg-icons";
+@import "reset";
+@import "variables";
+// Syntax highlighting @import is at the bottom of this file
 
 /**************/
 /* BASE RULES */
@@ -33,8 +32,8 @@ body {
 
 .containerh {
   margin: 0 auto;
-  max-width: 750px;
-  padding: 0 10px;
+  max-width: 1200px;
+  padding: 0 20px;
   width: 100%;
 }
 
@@ -296,4 +295,7 @@ footer {
   text-align: center;
 }
 
-// Note: All @use statements are now at the top of the file
+// Settled on moving the import of syntax highlighting to the bottom of the CSS
+// ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start
+@import "highlights";
+@import "svg-icons";
