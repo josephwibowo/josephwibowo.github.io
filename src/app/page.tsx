@@ -22,7 +22,7 @@ export default function Home() {
               Joseph Wibowo
             </h1>
             <p className="text-muted-foreground text-lg md:text-xl font-mono">
-              Data Engineering & Analytics
+              Engineering Data Platforms. (Powered by Spec-Driven Vibing)
             </p>
           </motion.div>
 
