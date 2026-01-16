@@ -1,0 +1,9 @@
+#group-bar-chart text,
+#event-bar-chart text,
+#venue-bar-chart text {
+  font-size: 9px;
+  fill: black;
+}
+
+th { font-size: 14px; }
+td { font-size: 13px; }

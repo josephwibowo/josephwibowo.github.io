@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Meetup Dashboard – Joseph Wibowo's Portfolio – Making Sense of the World through Data</title>
+
+      <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+    <meta name="google-site-verification" content="krIEnu2grn6jQTcU-SIx8fgb8e_1-YzqhOTa_TYKv5I" />
+    
+    <meta name="description" content="
+" />
+    <meta property="og:description" content="
+" />
+    
+    <meta name="author" content="Joseph Wibowo's Portfolio" />
+
+    
+    <meta property="og:title" content="Meetup Dashboard" />
+    <meta property="twitter:title" content="Meetup Dashboard" />
+    
+
+
+  <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@400;600;700&display=swap"
+    rel="stylesheet">
+
+  
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css"
+    crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="/css/leaflet.css" />
+  <link rel="stylesheet" type="text/css" href="/css/dc.min.css" />
+  <link rel="stylesheet" type="text/css" href="/style-db.css" />
+  <link rel="stylesheet" type="text/css" href="/css/charts.css" />
+  
+  <!-- index.css content moved to style.scss via import -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="alternate" type="application/rss+xml" title="Joseph Wibowo's Portfolio - Making Sense of the World through Data"
+    href="/feed.xml" />
+  <style>
+    .prettyprint ol.linenums>li {
+      list-style-type: decimal;
+    }
+  </style>
+
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Meetup Dashboard | Joseph Wibowo’s Portfolio</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Meetup Dashboard" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Making Sense of the World through Data" />
+<meta property="og:description" content="Making Sense of the World through Data" />
+<link rel="canonical" href="http://josephwibowo.github.io/Meetup_Analytics_Dashboard/" />
+<meta property="og:url" content="http://josephwibowo.github.io/Meetup_Analytics_Dashboard/" />
+<meta property="og:site_name" content="Joseph Wibowo’s Portfolio" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-11-24T00:00:00-08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Meetup Dashboard" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2018-11-24T00:00:00-08:00","datePublished":"2018-11-24T00:00:00-08:00","description":"Making Sense of the World through Data","headline":"Meetup Dashboard","mainEntityOfPage":{"@type":"WebPage","@id":"http://josephwibowo.github.io/Meetup_Analytics_Dashboard/"},"url":"http://josephwibowo.github.io/Meetup_Analytics_Dashboard/"}</script>
+<!-- End Jekyll SEO tag -->
+
+</head>
+
+<body>
+  <div class="wrapper-masthead">
+    <div class="containerh">
+      <header class="masthead clearfix">
+        <a href="/" class="site-avatar"><img src="https://raw.githubusercontent.com/josephwibowo/josephwibowo.github.io/master/images/logo.png" /></a>
+
+        <div class="site-info">
+          <h1 class="site-name"><a href="/">Joseph Wibowo's Portfolio</a></h1>
+          <p class="site-description">Making Sense of the World through Data</p>
+        </div>
+
+        <nav>
+          <a href="/">Home</a>
+          <a href="/about">About</a>
+        </nav>
+      </header>
+    </div>
+  </div>
+
+  <div id="main" role="main" class="containerb">
+    <article class="post">
+  <h1>Meetup Dashboard</h1>
+
+  <div class="entry">
+    
+
+    
+    	<div class="container-fluid">
+	<div class="row">
+        <div class="col-6">
+        	<h5>Events over Time (filter with bottom chart)</h5>
+			<div id="time-chart">
+			</div>
+			<div id="time-range-chart"></div>
+		</div>
+		<div class="col-6">
+			<h5>Heatmap of Events</h5>
+			<div id="map" style="height:490px;"></div>
+		</div>
+	</div>
+	<div class="row">
+        <div class="col-4">
+        	<h5>Top 10 Groups with Most Events</h5>
+			<div id="group-bar-chart"></div>
+		</div>
+		<div class="col-4">
+			<h5>Top 10 Events with Most RSVPs</h5>
+			<div id="event-bar-chart"></div>
+		</div>
+		<div class="col-4">
+			<h5>Top 10 Venues with Most Events</h5>
+			<div id="venue-bar-chart"></div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-6">
+			<h5>Event Name Wordcloud</h5>
+            <div id="wordcloud"></div>
+            <img class="img-thumbnail" style="margin-top: 80px;" src="/images/meetup.svg"/>     
+        </div>
+        <div class="col-6">
+        	<h5>Groups Table</h5>
+			<table id="groups-data-table" class="table table-striped table-bordered table-font" width="100%"></table>
+		</div>
+	</div>
+</div>
+    
+  </div>
+
+  <div class="date">
+    Submitted on November 24, 2018
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'josephwibowo';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</article>
+
+  </div>
+
+  <div class="wrapper-footer">
+    <div class="containerh">
+      <footer class="footer">
+        
+
+
+
+<a href="https://github.com/josephwibowo/"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/josephwibowo"><i class="svg-icon linkedin"></i></a>
+
+
+
+
+
+
+      </footer>
+    </div>
+  </div>
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="/js/crossfilter.min.js"></script>
+  <script type="text/javascript" src="/js/dc.min.js"></script>
+  <script type="text/javascript" src="/js/datatables.min.js"></script>
+  <script type="text/javascript" src="/js/dc.datatables.js"></script>
+  <script type="text/javascript" src="/js/leaflet.js"></script>
+  <script type="text/javascript" src="/js/leaflet-heat.js"></script>
+  <script type="text/javascript" src="/js/underscore-min.js"></script>
+  <script type="text/javascript" src="/js/d3-cloud.js"></script>
+  <script type="text/javascript" src="/js/graphs.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js" charset="utf-8"></script>
+  
+  
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129747471-1"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-129747471-1');
+	</script>
+
+	<!-- End Google Analytics -->
+
+
+</body>
+
+</html>

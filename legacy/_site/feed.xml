@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.10.0">Jekyll</generator><link href="http://josephwibowo.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="http://josephwibowo.github.io/" rel="alternate" type="text/html" /><updated>2026-01-15T23:41:06-08:00</updated><id>http://josephwibowo.github.io/feed.xml</id><title type="html">Joseph Wibowo’s Portfolio</title><subtitle>Making Sense of the World through Data</subtitle><entry><title type="html">Mantora</title><link href="http://josephwibowo.github.io/Mantora/" rel="alternate" type="text/html" title="Mantora" /><published>2026-01-15T00:00:00-08:00</published><updated>2026-01-15T00:00:00-08:00</updated><id>http://josephwibowo.github.io/Mantora</id><content type="html" xml:base="http://josephwibowo.github.io/Mantora/"><![CDATA[<p style="text-align: center;"><a href="/Mantora/"><img src="/images/mantora_demo.gif" alt="Mantora Demo" /></a></p>
+<p style="color:gray; font-size: 80%; text-align: center;"><em>Mantora is a local-first MCP observer: a lightweight UI + proxy for inspecting LLM data access (sessions, tool calls, results) with protective defaults.</em></p>
+
+<p style="color:gray; font-size: 120%; text-align: center; font-family: Helvetica;"><a href="https://github.com/josephwibowo/mantora-mcp">https://github.com/josephwibowo/mantora-mcp</a></p>
+
+<p>Mantora sits between your LLM client (Claude/Cursor) and the target MCP server (DuckDB/Postgres). It intercepts JSON-RPC messages to log traffic and enforce safety policies.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[Mantora is a local-first MCP observer: a lightweight UI + proxy for inspecting LLM data access (sessions, tool calls, results) with protective defaults.]]></summary></entry><entry><title type="html">SOJI</title><link href="http://josephwibowo.github.io/SOJI/" rel="alternate" type="text/html" title="SOJI" /><published>2025-08-25T00:00:00-07:00</published><updated>2025-08-25T00:00:00-07:00</updated><id>http://josephwibowo.github.io/SOJI</id><content type="html" xml:base="http://josephwibowo.github.io/SOJI/"><![CDATA[<p style="text-align: center;"><a href="/SOJI/"><img src="/images/soji.png" alt="Poster" /></a></p>
+<p style="color:gray; font-size: 80%; text-align: center;"><em>SOJI is a web saas app for Etsy Inventory Management</em></p>
+
+<p style="color:gray; font-size: 120%; text-align: center; font-family: Helvetica;"><a href="https://sojiapp.com">https://sojiapp.com</a></p>
+<p>Trying my hand at building a micro SaaS app. I have released a waitlist page as a cloudfront site as I build the main product. I may pivot but let’s see what happens.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[SOJI is a web saas app for Etsy Inventory Management]]></summary></entry><entry><title type="html">Predicting Closures</title><link href="http://josephwibowo.github.io/CovidSMB/" rel="alternate" type="text/html" title="Predicting Closures" /><published>2022-12-28T00:00:00-08:00</published><updated>2022-12-28T00:00:00-08:00</updated><id>http://josephwibowo.github.io/CovidSMB</id><content type="html" xml:base="http://josephwibowo.github.io/CovidSMB/"><![CDATA[<p style="text-align: center;"><a href="/CovidSMB/"><img src="/images/poster_small.jpg" alt="Poster" /></a></p>
+<p style="color:gray; font-size: 80%; text-align: center;"><em>Machine learning to predict restaurant closures</em></p>
+
+<h1 id="overview">Overview</h1>
+
+<p>This group project was part of <a href="https://omscs.gatech.edu/cse-6242-data-and-visual-analytics-course-videos">CSE 6242 - Data and Visual Analytics</a>.
+I wrote a majority of the code to clean/process the data, perform all analysis, and test/train the machine learning models.</p>
+
+<p><img src="/images/poster.jpg" alt="Poster" /></p>
+
+<p>View the full academic report <a href="http://josephwibowo.github.io/assets/Final_Report.pdf">Here</a>.</p>
+
+<p>Youtube Presentation: https://youtu.be/LR0JTmhJ32M</p>]]></content><author><name></name></author><summary type="html"><![CDATA[Machine learning to predict restaurant closures]]></summary></entry><entry><title type="html">CloudyCam</title><link href="http://josephwibowo.github.io/CloudyCam/" rel="alternate" type="text/html" title="CloudyCam" /><published>2022-11-04T00:00:00-07:00</published><updated>2022-11-04T00:00:00-07:00</updated><id>http://josephwibowo.github.io/CloudyCam</id><content type="html" xml:base="http://josephwibowo.github.io/CloudyCam/"><![CDATA[<p style="text-align: center;"><a href="/CloudyCam/"><img src="/images/cloudycam.gif" alt="Dashboard Screenshot" /></a></p>
+<p style="color:gray; font-size: 80%; text-align: center;"><em>CloudyCam is a Nest Camera Recorder in Python</em></p>
+
+<p><strong>All Credit goes to https://github.com/dend/foggycam who created the method to record Nest cameras in C#.</strong></p>
+
+<h1 id="learnings">Learnings</h1>
+
+<p>Repo Link: https://github.com/josephwibowo/CloudyCam</p>
+
+<ul>
+  <li>Turning a stream of bytes into a mp4 file</li>
+  <li>WebSocket protocol and how to use the APIs to send/receive data</li>
+  <li>Protocol Buffers (protobuf) and how to read the data Google Nest sends</li>
+</ul>
+
+<h1 id="next-steps">Next steps</h1>
+<ul>
+  <li>Add unit/integration tests</li>
+  <li>Dockerize to run on something like a homelab or Unraid</li>
+</ul>]]></content><author><name></name></author><summary type="html"><![CDATA[CloudyCam is a Nest Camera Recorder in Python]]></summary></entry><entry><title type="html">MeetBaeArea</title><link href="http://josephwibowo.github.io/Meetup_Analytics/" rel="alternate" type="text/html" title="MeetBaeArea" /><published>2018-11-24T00:00:00-08:00</published><updated>2018-11-24T00:00:00-08:00</updated><id>http://josephwibowo.github.io/Meetup_Analytics</id><content type="html" xml:base="http://josephwibowo.github.io/Meetup_Analytics/"><![CDATA[<p style="border:1px solid gray;"><a href="/Meetup_Analytics/"><img src="/images/dashboard-min.gif" alt="Dashboard Screenshot" /></a></p>
+<p style="color:gray; font-size: 80%; text-align: center;"><em>End-to-end analytics project of Meetup.com data</em></p>
+
+<h1 id="objective">Objective</h1>
+<p>The primary objective of this project was to gain a deeper understanding of data engineering concepts and tools. This was achieved through building an ETL data pipeline. The frontend was added to better appreciate the backend work required for even the simplest of data explorations.
+<br /><br /><a href="/Meetup_Analytics_Dashboard/"><strong>View the dashboard here</strong></a></p>
+
+<h1 id="technical-overview">Technical Overview</h1>
+<p style="color:gray; font-size: 80%; text-align: center;"><img src="/images/pipeline.png" alt="pipeline" />
+<em>Pipeline visualized</em></p>
+<p>Steps in the Data Pipeline:</p>
+<ol>
+  <li>Python scripts retrieve data from Meetup via their API and stores the data in a relational Postgres database.</li>
+  <li>SQL scripts then transform the data into a <a href="http://www.essai.rnu.tn/Ebook/Informatique/The%20Data%20Warehouse%20Toolkit,%203rd%20Edition.pdf">star schema</a> for reporting, and then loads the data into a data warehouse.</li>
+  <li>A Flask app (in this case, Github pages) is used to retrieve the data from the warehouse and then visualize it using D3.js</li>
+</ol>
+
+<p>At a very high level, these steps are what most data pipelines boil down to: <strong>E</strong>xtract relational data, <strong>T</strong>ransform the data for reporting, <strong>L</strong>oad the data into a warehouse. While simple conceptually, the details and complexities that each step brings is enough to make companies hire data engineers. One amazing tool that allows engineers to manage their data pipelines is…</p>
+
+<h3 id="airflow">Airflow</h3>
+<p><a href="https://airbnb.io/projects/airflow/">Airflow</a>
+was developed by Airbnb to manage their own internal pipelines. The library is written in Python and the Apache Software Foundation is incubating it so the code will be well-maintained. Setup is minimal and intuitive which lessens the learning curve.<br /><br />
+In the simplest words, Airflow will schedule and run the above 3 data pipeline steps. To better help you understand what Airflow did for this project, here is a screenshot of the UI Airflow provides:<br /><br />
+<img src="/images/airflow.png" alt="airflow" /></p>
+<p style="color:gray; font-size: 80%; text-align: center;"><i>My Airflow UI showing me my data pipeline is healthy :)</i></p>
+<p>My data pipeline (A.K.A. DAG) is called “meetup_to_postgres” and there are 4 steps the pipeline does indicated by the circles:</p>
+<ol>
+<li> initialize_db </li>
+<li> call_meetup_api </li>
+<li> stage_data </li>
+<li> load_data </li>
+</ol>
+<p>The green boxes indicate a scheduled run (daily) of the pipeline and if the steps ran successfully. The black tooltip shows an example of Airflow running these steps for a historical backfill on January 2nd, 2017. I was able to succesfully backfill the data all the way back to 2008 in ~4 days!</p>
+
+<h3 id="docker">Docker</h3>
+<p>Lastly, I need to mention <a href="https://www.docker.com/">Docker</a> which I used to deploy my app to AWS.<br /><br />
+Learning how to deploy an application outside of your own laptop is a daunting task for the inexperienced, but Docker provides a robust solution for this. I won’t explain the details, but for this project, I used Docker to create 3 containers to run the Airflow scheduler, Airflow webserver, and a Postgres database for Airflow to store metadata.<br /><br />
+<img src="/images/dockerlocal.png" alt="docker-cmd-line" /></p>
+<p style="color:gray; font-size: 80%; text-align: center;"><i>My project's Docker containers running on an AWS EC2 instance</i></p>
+<p>The config files to create those containers were uploaded to Docker’s website (similar to github) and then pulled into an AWS EC2 instance. After running a few commands in the terminal, those containers I developed locally are now running on an EC2 instance in the cloud. This just touches the surface of how Docker can be used, so I recommend learning about it if this sounds useful to you.</p>
+
+<h1 id="the-process">The Process</h1>
+<h2 id="0-finding-a-data-api">0) Finding a data API</h2>
+<p>I included this step because the data is the most important part of the project. Find data you are genuinely interested in and the motivation to complete the project will greatly increase. I chose the Meetup API because I am interested in exploring human behavior. <a href="https://github.com/toddmotto/public-apis">Here is a list of other data APIs.</a><br /><br />After you find the data, start asking questions. For me, the question I wanted to answer was “what does the dating scene look like on Meetup for the bay area?”</p>
+<h2 id="1-retrieving-the-data">1) Retrieving the data</h2>
+<p>The <a href="https://www.meetup.com/meetup_api/">Meetup API</a> is a standard RESTful API allows for authentication through a free API key. Instead of creating my own API wrapper in Python to retrieve the data, I utilized a lot of <a href="https://github.com/meetup/python-api-client">Meetup’s unmaintained Python API wrapper code</a>. The code was definitely old and needed to be updated to handle python3, pagination, and new endpoints, but it managed to get the job done. <br /><br />
+The calls to retrieve the data ended up being as simple as:</p>
+<pre class="prettyprint linenums">
+m = Meetup() # Meetup API wrapper object
+EVENT_KWARGS['no_earlier_than'] = self.start
+EVENT_KWARGS['no_later_than'] = self.end
+
+all_groups = m.get_groups(**GROUP_KWARGS) # get_groups hits the API and paginates
+                                          # through all groups within a set of filters
+with self.db_session() as db:
+    for group_obj in all_groups:
+      for group in group_obj.results:
+          time.sleep(0.4)
+          group.get_events(m, **EVENT_KWARGS) # get_events hits the API and paginates
+                                              # through all events in a group
+
+      load_groups(all_groups, db, self.start) # load_groups stores all events/groups in the database
+                                              # using SQLalchemy functions
+</pre>
+<p><br />
+If you want to see the rest of code, please refer to the <a href="https://github.com/josephwibowo/MeetBaeArea/tree/master/dags/meetup">wrapper module</a> and the <a href="https://github.com/josephwibowo/MeetBaeArea/blob/master/dags/operators/meetup_to_postgres_operator.py">airflow operator</a> (an Airflow class to run the data retrieval step).</p>
+
+<h2 id="2-transforming-and-loading-the-data">2) Transforming and Loading the data</h2>
+<p>Now that the Meetup data is stored in a database (using AWS RDS in this case), the next step is to transform the data into a star schema. I used SQLalchemy to create the models and build the tables in Python. The transformations are done in pure sql (executed through SQLalchemy in Airflow) because the data was not very complex or large enough to use a more powerful tool. The <a href="https://github.com/josephwibowo/MeetBaeArea/tree/master/dags/sql">sql scripts</a> are straightforward:</p>
+<ul>
+  <li>create_date_dim.sql - Generates a table for the date dimension table</li>
+  <li>get_last_job_date.sql - Gets the most recent execution date of the data pipeline</li>
+  <li>staging.sql - Staging scripts before the tables are loaded into production</li>
+  <li>load_data.sql - Load the tables into production</li>
+</ul>
+
+<p><img src="/images/schema.png" alt="schemas" /></p>
+<p style="color:gray; font-size: 80%; text-align: center;"><i>The final schemas and tables in Postico</i></p>
+<p>In the real-world, the transactional data and staging/production data would be in separate databases. I am not entirely sure about best practices when it comes to having the staging and production tables live in the same database, so if anyone has insights into this, it would be great if you commented.<br /><br />
+Lastly, I would like to point out that the most complex part of this step was understanding <a href="https://dwbi.org/etl/etl/53-methods-of-incremental-loading-in-data-warehouse">incremental load</a>. For this project, I used batch dates to determine if the data existed in the warehouse or not.</p>
+
+<h2 id="3-visualizing-the-data">3) Visualizing the data</h2>
+<p>Finally, the last (and most) fun step: visualizing the data.<br />If you have not seen the dashboard yet, <a href="/Meetup_Analytics_Dashboard/">you can view it here</a>.<br /><br /> I credit <a href="http://adilmoujahid.com/posts/2016/08/interactive-data-visualization-geospatial-d3-dc-leaflet-python/">Adil Moujahid’s post</a> for showing me <a href="https://dc-js.github.io/dc.js/">dc.js</a> and <a href="https://leafletjs.com/plugins.html">leaflet</a> which I used in my dashboard. The word cloud was built using <a href="https://github.com/jasondavies/d3-cloud">Jason Davies’ library</a>. 
+Since most companies use a 3rd-party software like Tableau instead of D3.js to visualize the data, I will not go into how I coded the charts as it is not essential to know. <a href="https://github.com/josephwibowo/josephwibowo.github.io/blob/master/js/graphs.js">You can view my .js file here to see how I built the charts.</a></p>
+
+<h1 id="conclusion">Conclusion</h1>
+<p>My original plan was to host the dashboard using a Flask app on a server, but I realized that the financial and work investment needed to do that would be too much for me, so I found github pages to be the perfect solution. While the data is a static CSV, I am still happy I was able to build an entire pipeline robust enough to extract years of data. I hope to start a new project using more powerful tools like Spark, Hadoop, and Tensorflow and implement machine learning models within a pipeline.<br /><br />If you read this far, I hope you learned something new or were inspired to build something yourself. Feel free to drop a comment if you have any questions, and I will respond when I can. Thanks for reading!</p>]]></content><author><name></name></author><summary type="html"><![CDATA[End-to-end analytics project of Meetup.com data]]></summary></entry><entry><title type="html">Meetup Dashboard</title><link href="http://josephwibowo.github.io/Meetup_Analytics_Dashboard/" rel="alternate" type="text/html" title="Meetup Dashboard" /><published>2018-11-24T00:00:00-08:00</published><updated>2018-11-24T00:00:00-08:00</updated><id>http://josephwibowo.github.io/Meetup_Analytics_Dashboard</id><content type="html" xml:base="http://josephwibowo.github.io/Meetup_Analytics_Dashboard/"><![CDATA[]]></content><author><name></name></author><summary type="html"><![CDATA[]]></summary></entry></feed>
