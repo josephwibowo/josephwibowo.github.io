@@ -15,6 +15,9 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Joseph Wibowo | Data Engineering & Analytics",
   description: "Making sense of the world through data.",
+  verification: {
+    google: "JGn4Y3QSXAhqwi08hmYTcDi7f6VCPuSJzqUvfzYWVv0",
+  },
 };
 
 export default function RootLayout({
