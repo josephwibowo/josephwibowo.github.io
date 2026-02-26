@@ -14,7 +14,7 @@ export const projects: Project[] = [
         description: "Personal finance app for the FIRE movement. Built with React and Python.",
         tags: ["SaaS", "Python", "React", "GCP"],
         link: "https://stokemoney.com",
-        image: "/images/stoke.png",
+        image: "/images/stoke.gif",
         featured: true,
         slug: "stoke",
     },

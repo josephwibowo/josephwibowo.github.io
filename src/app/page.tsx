@@ -94,7 +94,9 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
         </div>
 
         <div>
-          <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors font-sans">{project.title}</h3>
+          <Link href={`/projects/${project.slug}`} className="block group-hover:text-primary transition-colors font-sans">
+            <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
+          </Link>
           <p className="text-muted-foreground leading-relaxed text-sm md:text-base line-clamp-3 max-w-[90%]">
             {project.description}
           </p>
