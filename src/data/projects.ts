@@ -10,6 +10,14 @@ export interface Project {
 
 export const projects: Project[] = [
     {
+        title: "Stoke",
+        description: "Personal finance app for the FIRE movement. Built with React and Python.",
+        tags: ["SaaS", "Python", "React", "GCP"],
+        link: "https://stokemoney.com",
+        image: "/images/stoke.png",
+        slug: "stoke",
+    },
+    {
         title: "Mantora",
         description: "A local-first MCP observer: lightweight UI + proxy for inspecting LLM data access with protective defaults. Sits between Claude/Cursor and target MCP servers.",
         tags: ["MCP", "LLM", "Python", "Security", "SQLite"],
@@ -17,14 +25,6 @@ export const projects: Project[] = [
         image: "/images/mantora_demo.gif",
         featured: true,
         slug: "mantora",
-    },
-    {
-        title: "SOJI",
-        description: "Multi-tenant SaaS application for Etsy Inventory Management. Built with React and Python.",
-        tags: ["SaaS", "Python", "React", "AWS"],
-        link: "https://sojiapp.com",
-        image: "/images/soji.png",
-        slug: "soji",
     },
     {
         title: "CloudyCam",
