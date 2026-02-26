@@ -15,6 +15,7 @@ export const projects: Project[] = [
         tags: ["SaaS", "Python", "React", "GCP"],
         link: "https://stokemoney.com",
         image: "/images/stoke.png",
+        featured: true,
         slug: "stoke",
     },
     {
@@ -23,7 +24,6 @@ export const projects: Project[] = [
         tags: ["MCP", "LLM", "Python", "Security", "SQLite"],
         link: "https://github.com/josephwibowo/mantora-mcp",
         image: "/images/mantora_demo.gif",
-        featured: true,
         slug: "mantora",
     },
     {
