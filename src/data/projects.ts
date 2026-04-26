@@ -5,6 +5,7 @@ export interface Project {
     link: string;
     image?: string;
     featured?: boolean;
+    external?: boolean;
     slug: string;
 }
 
@@ -17,6 +18,15 @@ export const projects: Project[] = [
         image: "/images/stoke.gif",
         featured: true,
         slug: "stoke",
+    },
+    {
+        title: "The Bus Factor",
+        description: "An interactive exploration of the bus factor — how concentrated knowledge in a team becomes a single point of failure.",
+        tags: ["Interactive", "Essay"],
+        link: "https://josephwibowo.github.io/the-bus-factor/",
+        image: "/images/the-bus-factor.png",
+        external: true,
+        slug: "the-bus-factor",
     },
     {
         title: "Mantora",

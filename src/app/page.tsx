@@ -88,13 +88,21 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
               </span>
             ))}
           </div>
-          <Link href={`/projects/${project.slug}`} className="p-2 rounded-full bg-background/80 hover:bg-primary hover:text-white transition-colors">
+          <Link
+            href={project.external ? project.link : `/projects/${project.slug}`}
+            {...(project.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            className="p-2 rounded-full bg-background/80 hover:bg-primary hover:text-white transition-colors"
+          >
             <ArrowUpRight className="w-4 h-4" />
           </Link>
         </div>
 
         <div>
-          <Link href={`/projects/${project.slug}`} className="block group-hover:text-primary transition-colors font-sans">
+          <Link
+            href={project.external ? project.link : `/projects/${project.slug}`}
+            {...(project.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            className="block group-hover:text-primary transition-colors font-sans"
+          >
             <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
           </Link>
           <p className="text-muted-foreground leading-relaxed text-sm md:text-base line-clamp-3 max-w-[90%]">

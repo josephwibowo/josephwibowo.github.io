@@ -15,9 +15,11 @@ interface ProjectPageProps {
 }
 
 export async function generateStaticParams() {
-    return projects.map((project) => ({
-        slug: project.slug,
-    }));
+    return projects
+        .filter((project) => !project.external)
+        .map((project) => ({
+            slug: project.slug,
+        }));
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
