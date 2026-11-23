@@ -13,6 +13,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://josephwibowo.github.io"),
   title: "Joseph Wibowo | Data Engineering & Analytics",
   description: "Making sense of the world through data.",
   verification: {

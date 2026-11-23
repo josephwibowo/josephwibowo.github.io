@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { projects } from "@/data/projects";
+import { projects, type Project } from "@/data/projects";
 import { ArrowUpRight, Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -39,7 +39,7 @@ export default function Home() {
         </div>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 auto-rows-[300px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 auto-rows-[minmax(300px,auto)]">
           {projects.map((project, index) => (
             <ProjectCard key={project.title} project={project} index={index} />
           ))}
@@ -60,10 +60,8 @@ function SocialLink({ href, icon }: { href: string; icon: React.ReactNode }) {
   );
 }
 
-function ProjectCard({ project, index }: { project: any; index: number }) {
-  // Bento Span Logic
-  const isFeatured = project.featured;
-  const spanClass = isFeatured ? "md:col-span-2 md:row-span-1" : "col-span-1";
+function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const preview = typeof project.image === "object" ? project.image : undefined;
 
   return (
     <motion.div
@@ -71,48 +69,45 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, delay: index * 0.1 }}
       className={cn(
-        "group relative overflow-hidden rounded-3xl bg-card border border-border/50 hover:border-primary/50 transition-colors h-full flex flex-col",
-        spanClass
+        "group relative overflow-hidden rounded-3xl bg-card border border-border/50 hover:border-primary/50 focus-within:border-primary/50 transition-colors h-full flex flex-col",
+        project.featured && "md:col-span-2",
+        preview && "md:grid md:grid-cols-[minmax(0,1fr)_52%] md:items-center"
       )}
     >
       {/* Hover Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-0" />
 
-      {/* Content Container - Pushed to top */}
-      <div className="flex flex-col p-6 z-20 relative h-full">
-        <div className="flex justify-between items-start mb-4">
-          <div className="flex flex-wrap gap-2 max-w-[80%]">
-            {project.tags.map((tag: string) => (
-              <span key={tag} className="px-2 py-1 text-xs font-mono font-medium rounded-md bg-secondary/50 text-muted-foreground border border-transparent group-hover:border-primary/20 backdrop-blur-sm">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <Link
-            href={project.external ? project.link : `/projects/${project.slug}`}
-            {...(project.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-            className="p-2 rounded-full bg-background/80 hover:bg-primary hover:text-white transition-colors"
-          >
-            <ArrowUpRight className="w-4 h-4" />
-          </Link>
+      <div className="flex flex-col p-6 z-20">
+        <div className={cn("flex flex-wrap gap-2 mb-4 pr-9", preview && "md:pr-0")}>
+          {project.tags.map((tag) => (
+            <span key={tag} className="px-2 py-1 text-xs font-mono font-medium rounded-md bg-secondary/50 text-muted-foreground border border-transparent group-hover:border-primary/20 backdrop-blur-sm">
+              {tag}
+            </span>
+          ))}
         </div>
 
-        <div>
-          <Link
-            href={project.external ? project.link : `/projects/${project.slug}`}
-            {...(project.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-            className="block group-hover:text-primary transition-colors font-sans"
-          >
-            <h3 className="text-2xl font-bold mb-2">{project.title}</h3>
-          </Link>
-          <p className="text-muted-foreground leading-relaxed text-sm md:text-base line-clamp-3 max-w-[90%]">
-            {project.description}
-          </p>
-        </div>
+        <Link
+          href={project.external ? project.link : `/projects/${project.slug}`}
+          {...(project.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          className="block group-hover:text-primary transition-colors font-sans after:absolute after:inset-0 after:z-20"
+        >
+          <h2 className={cn("text-2xl font-bold mb-2", preview && "md:text-3xl")}>{project.title}</h2>
+          <span className="absolute z-30 top-5 right-5 p-2 rounded-full bg-background/80 group-hover:bg-primary group-hover:text-white transition-colors" aria-hidden="true">
+            <ArrowUpRight className="w-4 h-4" />
+          </span>
+        </Link>
+        <p className={cn("text-muted-foreground leading-relaxed text-sm md:text-base", !preview && "line-clamp-3 max-w-[90%]")}>
+          {project.description}
+        </p>
       </div>
 
-      {/* Image Background/Peek - Pushed to bottom */}
-      {project.image && (
+      {preview && (
+        <div className="relative mx-4 mb-4 overflow-hidden rounded-2xl border border-border md:ml-0 md:mb-0">
+          <Image {...preview} alt="" className="w-full h-auto" preload />
+        </div>
+      )}
+
+      {typeof project.image === "string" && (
         <div
           className="absolute bottom-0 left-0 right-0 h-1/2 opacity-30 group-hover:opacity-70 transition-all duration-500 z-10 pointer-events-none translate-y-4 group-hover:translate-y-0"
           style={{
@@ -122,7 +117,7 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
         >
           <Image
             src={project.image}
-            alt={project.title}
+            alt=""
             fill
             className="object-cover object-top"
           />
