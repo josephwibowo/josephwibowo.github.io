@@ -3,7 +3,13 @@ export interface Project {
     description: string;
     tags: string[];
     link: string;
-    image?: string;
+    linkLabel?: string;
+    image?: string | {
+        src: string;
+        alt: string;
+        width: number;
+        height: number;
+    };
     featured?: boolean;
     external?: boolean;
     slug: string;
@@ -11,11 +17,17 @@ export interface Project {
 
 export const projects: Project[] = [
     {
-        title: "Stoke",
-        description: "Personal finance app for the FIRE movement. Built with React and Python.",
-        tags: ["SaaS", "Python", "React", "GCP"],
-        link: "https://stokemoney.com",
-        image: "/images/stoke.gif",
+        title: "Stoke Money",
+        description: "A personal finance app for seeing where your money went, what changed, and which bills are coming up.",
+        tags: ["Personal Finance", "iOS"],
+        link: "https://www.stokemoney.com/#app",
+        linkLabel: "Join the waitlist",
+        image: {
+            src: "/images/stoke-money-preview.jpg",
+            alt: "Stoke Money’s sample transaction ledger with its illustrated companion and row punch",
+            width: 1200,
+            height: 630,
+        },
         featured: true,
         slug: "stoke",
     },

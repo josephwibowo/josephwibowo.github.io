@@ -1,9 +1,10 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import type { Metadata } from "next";
 import ReactMarkdown from "react-markdown";
 import Link from "next/link";
-import { ArrowLeft, Github, Globe } from "lucide-react";
+import { ArrowLeft, Globe } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { projects } from "@/data/projects";
@@ -22,23 +23,42 @@ export async function generateStaticParams() {
         }));
 }
 
+export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
+    const { slug } = await params;
+    const project = projects.find((entry) => entry.slug === slug && !entry.external);
+    if (!project) return {};
+
+    const canonical = `/projects/${project.slug}`;
+    const title = `${project.title} | Joseph Wibowo`;
+    const description = project.description;
+    const preview = typeof project.image === "object" ? project.image : undefined;
+    const images = preview && [{ url: preview.src, alt: preview.alt, width: preview.width, height: preview.height }];
+
+    return {
+        title,
+        description,
+        alternates: { canonical },
+        openGraph: { title, description, url: canonical, type: "website", images },
+        twitter: { card: preview ? "summary_large_image" : "summary", title, description, images },
+    };
+}
+
 export default async function ProjectPage({ params }: ProjectPageProps) {
     const { slug } = await params;
 
-    // Find project metadata
     const project = projects.find((p) => p.slug === slug);
     if (!project) notFound();
+    const preview = typeof project.image === "object" ? project.image : undefined;
 
-    // Read markdown file
     const filePath = path.join(process.cwd(), "src/content/projects", `${slug}.md`);
-    let content = "";
+    let content: string;
 
     try {
         const fileContent = fs.readFileSync(filePath, "utf-8");
         const { content: markdown } = matter(fileContent);
         content = markdown;
     } catch (error) {
-        // If file doesn't exist, we fallback to description or empty
+        if (!(error instanceof Error && "code" in error && error.code === "ENOENT")) throw error;
         content = project.description;
     }
 
@@ -59,6 +79,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                         ))}
                     </div>
                     <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">{project.title}</h1>
+                    {preview && (
+                        <p className="text-lg text-muted-foreground mb-6">{project.description}</p>
+                    )}
 
                     <div className="flex gap-4">
                         {project.link !== "#" && (
@@ -69,22 +92,19 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                                 className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium"
                             >
                                 <Globe className="w-4 h-4" />
-                                Visit Project
+                                {project.linkLabel ?? "Visit Project"}
                             </a>
                         )}
-                        {/* Assuming mostly GitHub links, generic fallback for now */}
                     </div>
                 </header>
 
                 {project.image && (
-                    <div className="relative w-full h-[400px] md:h-[500px] mb-12 rounded-3xl overflow-hidden border border-border/50 bg-card">
-                        <Image
-                            src={project.image}
-                            alt={project.title}
-                            fill
-                            className="object-cover"
-                            priority
-                        />
+                    <div className={`relative w-full mb-12 rounded-3xl overflow-hidden border border-border/50 bg-card ${preview ? "" : "h-[400px] md:h-[500px]"}`}>
+                        {typeof project.image === "string" ? (
+                            <Image src={project.image} alt={project.title} fill className="object-cover" preload />
+                        ) : (
+                            <Image {...project.image} alt={project.image.alt} className="w-full h-auto" preload />
+                        )}
                     </div>
                 )}
 
