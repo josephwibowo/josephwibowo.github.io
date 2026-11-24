@@ -1,0 +1,57 @@
+/**
+ * Placeholder palette. The office uses a warm, light look so it reads as a
+ * miniature management game inside the site's dark page frame.
+ */
+
+/** The protagonist's accent marking and the Stoke screen glow (site --primary indigo). */
+export const PROTAGONIST_ACCENT = "#6366f1";
+
+export const PALETTE = {
+  floorA: "#efe4d2",
+  floorB: "#e8dbc5",
+  floorLine: "rgba(120, 94, 60, 0.10)",
+  rug: "#dfe0f7",
+  rugEdge: "#c7c9f2",
+  queueMark: "#e9b949",
+  wallFace: "#f6f0e6",
+  wallSide: "#e9dfcf",
+  wallCap: "#cdbfa8",
+  window: "#bfe3f5",
+  windowFrame: "#d8ccb8",
+  deskTop: "#d9b382",
+  deskLeft: "#b98f5d",
+  deskRight: "#a77d4d",
+  cabinetTop: "#d4d8de",
+  cabinetLeft: "#a9b1bc",
+  cabinetRight: "#8b95a3",
+  partitionTop: "#ebe5da",
+  partitionLeft: "#d3c9b8",
+  partitionRight: "#c2b6a2",
+  potTop: "#c9784e",
+  potLeft: "#ab5f3b",
+  potRight: "#934f30",
+  leaf: "#5f9e5a",
+  leafDark: "#477f45",
+  printerTop: "#eceef1",
+  printerLeft: "#c8ccd3",
+  printerRight: "#b1b6bf",
+  coffeeTop: "#4b4b52",
+  coffeeLeft: "#38383e",
+  coffeeRight: "#2c2c31",
+  monitorBack: "#5b6472",
+  screenOff: "#3b4452",
+  screenOn: "#8fd3f4",
+  robotBody: "#e6e9ee",
+  robotShade: "#c4cad3",
+  robotDark: "#5b6472",
+  robotMarking: "#9aa3b0",
+  visor: "#2b3340",
+  eye: "#7ee3f2",
+  paper: "#ffffff",
+  mug: "#f4f4f5",
+  coffee: "#7a4b2a",
+  shadow: "rgba(60, 40, 20, 0.18)",
+  selection: "#f59e0b",
+  alert: "#ef4444",
+  ok: "#22c55e",
+} as const;
