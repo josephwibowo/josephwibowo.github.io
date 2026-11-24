@@ -43,14 +43,37 @@ describe("depth sort", () => {
     expect(agent).toBeLessThan(orderOf(list, (d) => d.kind === "furniture" && d.index === deskIdx));
   });
 
-  // Regression: a walking robot popping behind furniture mid-step instead of using its fractional position.
+  // Regression: a walking robot painted over furniture it is still behind, because its mid-step position was
+  // rounded or ceiled to a whole tile instead of sorting by its fractional depth.
   it("orders a walking robot by its interpolated position", () => {
     const x = front.seat % L.width;
     const y = Math.floor(front.seat / L.width);
     // Stepping from the seat toward the walkway (away from the desk), halfway.
-    const list = drawOrder(x, y + 0.5);
-    const agent = orderOf(list, (d) => d.kind === "agent");
+    const fromSeat = drawOrder(x, y + 0.5);
     const deskIdx = L.furniture.findIndex((p) => p.tile === front.desk[0]);
-    expect(agent).toBeGreaterThan(orderOf(list, (d) => d.kind === "furniture" && d.index === deskIdx));
+    expect(orderOf(fromSeat, (d) => d.kind === "agent")).toBeGreaterThan(
+      orderOf(fromSeat, (d) => d.kind === "furniture" && d.index === deskIdx),
+    );
+
+    // A real half-step down a walkway column, (ax, y) -> (ax, y + 1), right beside furniture at (ax + 1, y):
+    // the robot's depth is that furniture's depth - 0.5, so it must draw before it and after furniture one
+    // depth unit further back. A whole-tile depth would tie it with the furniture ahead and draw it on top.
+    const ahead = L.furniture.findIndex(
+      (p) =>
+        p.x > 0 &&
+        p.y + 1 < L.height &&
+        L.walkable[p.y * L.width + p.x - 1] &&
+        L.walkable[(p.y + 1) * L.width + p.x - 1] &&
+        L.furniture.some((q) => q.x + q.y === p.x + p.y - 1),
+    );
+    expect(ahead).toBeGreaterThanOrEqual(0);
+    const piece = L.furniture[ahead];
+    const back = L.furniture.findIndex((p) => p.x + p.y === piece.x + piece.y - 1);
+    expect(back).toBeGreaterThanOrEqual(0);
+
+    const midStep = drawOrder(piece.x - 1, piece.y + 0.5);
+    const agent = orderOf(midStep, (d) => d.kind === "agent");
+    expect(agent).toBeLessThan(orderOf(midStep, (d) => d.kind === "furniture" && d.index === ahead));
+    expect(agent).toBeGreaterThan(orderOf(midStep, (d) => d.kind === "furniture" && d.index === back));
   });
 });

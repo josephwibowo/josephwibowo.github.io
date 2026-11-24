@@ -18,7 +18,7 @@ export interface AgentHitBox {
 }
 
 /** Height of desk tops, so taps on a desk's raised surface map to the desk. */
-const DESK_TOP_H = 9;
+export const DESK_TOP_H = 9;
 
 /** Maps tiles to the selectable furniture on them (desks, seats, Stoke desk). */
 export function buildFurnitureTargets(layout: Layout): Map<number, Exclude<Selection, null | { kind: "agent" }>> {
@@ -56,7 +56,11 @@ export function hitTest(
   for (const lift of [DESK_TOP_H, 0]) {
     const { tx, ty } = screenToTile(g, sx, sy + lift);
     if (tx < 0 || ty < 0 || tx >= layout.width || ty >= layout.height) continue;
-    const target = targets.get(ty * layout.width + tx);
+    const tile = ty * layout.width + tx;
+    // Only desks have a raised top; seats are hit on the floor plane alone.
+    const kind = layout.kinds[tile];
+    if (lift > 0 && kind !== "desk" && kind !== "stokeDesk") continue;
+    const target = targets.get(tile);
     if (target) return target;
   }
   return null;
