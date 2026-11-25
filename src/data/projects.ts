@@ -1,3 +1,6 @@
+/** Where a project sits in the catalogue: what is being built now, the work worth leading with, and the archive. */
+export type ProjectTier = "current" | "selected" | "archive";
+
 export interface Project {
     title: string;
     description: string;
@@ -10,9 +13,23 @@ export interface Project {
         width: number;
         height: number;
     };
-    featured?: boolean;
     external?: boolean;
     slug: string;
+    /** The year the project started. */
+    year: number;
+    tier: ProjectTier;
+    /** A short recorded demo of the project. */
+    demo?: string;
+    /** A prize or recognition, as one line. */
+    award?: string;
+    /**
+     * The painted miniature the home page's catalogue shows for this project. `src` is relative to the site root
+     * (no leading slash), because the home page loads it relative to itself and so works under any base path.
+     */
+    miniature?: {
+        src: string;
+        alt: string;
+    };
 }
 
 export const projects: Project[] = [
@@ -28,8 +45,29 @@ export const projects: Project[] = [
             width: 1200,
             height: 630,
         },
-        featured: true,
         slug: "stoke",
+        miniature: {
+            src: "office/assets/catalogue-stoke-greenhouse.v1.webp",
+            alt: "A painted miniature of a small balsa greenhouse glowing from inside, on a wooden plinth",
+        },
+        year: 2026,
+        tier: "current",
+    },
+    {
+        title: "Cascade",
+        description: "An Airflow plugin that runs an API deprecation as a program: one mapped task per account, human-in-the-loop exceptions, and migrations verified by telemetry.",
+        tags: ["Airflow", "Python", "React", "LLM"],
+        link: "https://github.com/josephwibowo/cascade",
+        external: true,
+        slug: "cascade",
+        miniature: {
+            src: "office/assets/catalogue-cascade.v1.webp",
+            alt: "A painted miniature of a tiered water cascade: channels fan out into many basins through small sluice gates, and a tiny figure stands at a closed gate",
+        },
+        year: 2026,
+        tier: "selected",
+        demo: "https://youtu.be/zLX3AQpTZR0",
+        award: "Winner · Astronomer’s Beyond the DAG hackathon, 2026",
     },
     {
         title: "The Bus Factor",
@@ -39,6 +77,12 @@ export const projects: Project[] = [
         image: "/images/the-bus-factor.png",
         external: true,
         slug: "the-bus-factor",
+        miniature: {
+            src: "office/assets/catalogue-bus-factor.v1.webp",
+            alt: "A painted miniature of a city bus at a stop, with a few tiny figures waiting beside it",
+        },
+        year: 2026,
+        tier: "selected",
     },
     {
         title: "Mantora",
@@ -47,6 +91,12 @@ export const projects: Project[] = [
         link: "https://github.com/josephwibowo/mantora-mcp",
         image: "/images/mantora_demo.gif",
         slug: "mantora",
+        miniature: {
+            src: "office/assets/catalogue-mantora.v1.webp",
+            alt: "A painted miniature of a glass observation booth, with a tiny figure watching a monitor inside",
+        },
+        year: 2026,
+        tier: "selected",
     },
     {
         title: "CloudyCam",
@@ -55,6 +105,8 @@ export const projects: Project[] = [
         link: "https://github.com/josephwibowo/CloudyCam",
         image: "/images/cloudycam.gif",
         slug: "cloudycam",
+        year: 2022,
+        tier: "archive",
     },
     {
         title: "Predicting Closures",
@@ -63,6 +115,8 @@ export const projects: Project[] = [
         link: "#",
         image: "/images/poster.jpg",
         slug: "predicting-closures",
+        year: 2020,
+        tier: "archive",
     },
     {
         title: "Meetup Analytics",
@@ -71,5 +125,7 @@ export const projects: Project[] = [
         link: "/projects/meetup-analytics/dashboard",
         image: "/images/dashboard-min.gif",
         slug: "meetup-analytics",
+        year: 2018,
+        tier: "archive",
     }
 ];
