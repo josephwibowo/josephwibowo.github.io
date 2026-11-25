@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
     const project = projects.find((entry) => entry.slug === slug && !entry.external);
     if (!project) return {};
 
-    const canonical = `/projects/${project.slug}`;
+    const canonical = `/projects/${project.slug}/`; // the site exports with trailing slashes
     const title = `${project.title} | Joseph Wibowo`;
     const description = project.description;
     const preview = typeof project.image === "object" ? project.image : undefined;

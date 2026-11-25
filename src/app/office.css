@@ -1,0 +1,216 @@
+/* The home page's living office (src/components/office/scene.ts). Every rule is scoped to .office so nothing reaches
+   the project pages; the page covers the viewport itself, so html and body are left alone. */
+
+.office {
+  --ink: #2a211b;
+  --muted-ink: #6a5a4d;
+  --vermilion-hi: #e2482c;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #1b1714;
+  font: 15px/1.4 var(--sans);
+  color: var(--ink);
+}
+.office * { box-sizing: border-box; }
+.office .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Pans sideways when the 16:9 stage is wider than the screen (portrait phones). Touch pans natively; mouse drags. */
+.office #viewport { position: fixed; inset: 0; overflow-x: auto; overflow-y: hidden; scrollbar-width: none;
+                    display: flex; align-items: center; overscroll-behavior-x: contain; }
+.office #viewport::-webkit-scrollbar { display: none; }
+.office #viewport.dragging { cursor: grabbing; }
+
+/* The stage covers the viewport at 16:9; flex centring keeps it on whole pixels (no resampling). */
+.office #stage { position: relative; flex: none; margin: 0 auto; overflow: hidden;
+                 width: max(100vw, calc(100svh * 1672 / 941)); aspect-ratio: 1672 / 941;
+                 user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.office #stage img { position: absolute; display: block; max-width: none; pointer-events: none; -webkit-user-drag: none; }
+.office #plate { left: 0; top: 0; width: 100%; height: 100%; }
+.office .frame { visibility: hidden; }
+.office .frame.on { visibility: visible; }
+.office .layer { position: absolute; pointer-events: none; }
+.office .layer > img { left: 0; top: 0; width: 100%; height: 100%; }
+
+/* Code glow on his model. --on is 0 at rest (the page is the still) and eases to 1 over the first ticks; --g flickers
+   on the 8 fps ticks. */
+.office .glow { position: absolute; pointer-events: none; border-radius: 50%; mix-blend-mode: screen; }
+.office #glow-spill { background: radial-gradient(closest-side, rgba(255,176,92,.55), rgba(255,150,70,.18) 55%, rgba(255,140,60,0) 100%);
+                      opacity: calc(var(--on, 0) * (.28 + var(--g, .5) * .32)); }
+.office #glow-core { background: radial-gradient(closest-side, rgba(255,226,170,.9), rgba(255,190,110,.35) 45%, rgba(255,160,80,0) 100%);
+                     opacity: calc(var(--on, 0) * (.22 + var(--g, .5) * .38)); }
+
+/* Monitor screens: masked to each screen face (feathered to its focus), nothing drawn at rest. The text plane is warped
+   onto the screen's corners (matrix3d, in stage px; --s converts stage px to CSS px). */
+.office .scr { position: absolute; pointer-events: none; visibility: hidden; -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+               -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.office .scr.on { visibility: visible; }
+.office .scr.tint { mix-blend-mode: screen; }
+.office .scr.tint.w1 { background: rgba(255,255,255,.08); }
+.office .scr.tint.w2 { background: rgba(255,255,255,.18); }
+.office .scr.tint.c1 { background: rgba(170,210,255,.16); }
+.office .scr.tint.k1 { background: rgba(255,238,200,.16); }
+.office .scr.ink { mix-blend-mode: multiply; }
+.office .scr.ink.d1 { background: rgba(70,70,95,.16); }
+.office .scr .txt { position: absolute; left: 0; top: 0; display: none; transform-origin: 0 0; opacity: .45;
+                    background-color: var(--ink); -webkit-mask-image: var(--tex); mask-image: var(--tex);
+                    -webkit-mask-size: 64px 48px; mask-size: 64px 48px; -webkit-mask-repeat: repeat-y; mask-repeat: repeat-y;
+                    -webkit-mask-position: 0 calc((var(--yo) + var(--off, 0)) * -1px); mask-position: 0 calc((var(--yo) + var(--off, 0)) * -1px); }
+.office .scr.ink.lines .txt { display: block; }
+
+/* Joseph's hit region: the only interactive figure */
+.office .hit { position: absolute; padding: 0; margin: 0; border: 0; background: transparent; cursor: pointer;
+               border-radius: 6px; -webkit-tap-highlight-color: transparent; pointer-events: auto; }
+.office .hit:focus-visible { outline: 2px solid rgba(255,255,255,.85); outline-offset: 2px; }
+
+/* Spotlight: the scene dims around one soft circle on Joseph, his desk, the model and the bubble (sized in stage %, so
+   it scales and pans with the stage and stays round). Nothing is drawn at rest. The scene keeps animating underneath. */
+.office .spot { position: absolute; inset: 0; pointer-events: none; opacity: 0; visibility: hidden;
+                transition: opacity .38s ease-in, visibility 0s .38s; }
+.office #spot-dim { background: radial-gradient(ellipse var(--rx) var(--ry) at var(--cx) var(--cy),
+                      rgba(14,10,7,0) 0%, rgba(14,10,7,0) 60%, rgba(14,10,7,.2) 72%, rgba(14,10,7,.52) 86%, rgba(14,10,7,.7) 100%); }
+.office #spot-warm { mix-blend-mode: soft-light;
+                     background: radial-gradient(ellipse var(--rx) var(--ry) at var(--cx) var(--cy),
+                       rgba(255,214,160,.5) 0%, rgba(255,214,160,.2) 45%, rgba(255,214,160,0) 70%); }
+.office #stage.lit .spot { opacity: 1; visibility: visible; transition: opacity .55s ease-out; }
+
+/* Thought bubble: a wool-felt prop photographed into the model (two felt balls, then the cloud with felt project
+   folders sewn on), shown piece by piece in 8 fps steps. No text: the prop is the button. It sits under the dim,
+   inside the spotlight's circle. */
+.office #thought-wrap { position: absolute; inset: 0; pointer-events: none; visibility: hidden; }
+.office #stage.lit #thought-wrap { visibility: visible; }
+.office #thought-wrap > img { position: absolute; opacity: 0; }
+.office #stage.lit #thought-wrap > img { opacity: 1; }
+.office #thought { position: absolute; padding: 0; margin: 0; border: 0; border-radius: 42%; background: none; cursor: pointer;
+                   pointer-events: auto; -webkit-tap-highlight-color: transparent; visibility: hidden; }
+.office #stage.lit #thought { visibility: visible; }
+.office #thought:focus-visible { outline: 2px solid rgba(255,250,240,.9); outline-offset: 3px; }
+/* pointing at it nudges the cloud up one pixel, the way an animator would between frames */
+.office #stage.lit:has(#thought:hover) #thought-wrap > img:last-of-type { translate: 0 -1px; }
+/* stop-motion entrance: each piece appears on its own 125 ms tick, like the scene's 8 fps */
+@keyframes office-appear { from { opacity: 0; } to { opacity: 1; } }
+.office #stage.lit #thought-wrap > img:nth-of-type(1) { animation: office-appear 1ms steps(1, end) .125s both; }
+.office #stage.lit #thought-wrap > img:nth-of-type(2) { animation: office-appear 1ms steps(1, end) .25s both; }
+.office #stage.lit #thought-wrap > img:nth-of-type(3) { animation: office-appear 1ms steps(1, end) .375s both; }
+
+/* Who he is, set straight on the photograph's out-of-focus foreground (bottom left), held up by a soft scrim */
+.office .scrim { position: fixed; inset: auto 0 0 0; height: min(58svh, 460px); z-index: 4; pointer-events: none;
+                 background: radial-gradient(120% 100% at 0% 100%, rgba(18,12,8,.62) 0%, rgba(18,12,8,.34) 45%, rgba(18,12,8,0) 75%),
+                             linear-gradient(to top, rgba(18,12,8,.38), rgba(18,12,8,0) 70%); }
+.office .intro { position: fixed; z-index: 5; left: max(clamp(18px, 3.2vw, 44px), env(safe-area-inset-left));
+                 bottom: max(clamp(18px, 3.6vh, 40px), env(safe-area-inset-bottom)); max-width: min(560px, calc(100vw - 36px));
+                 color: #fbf3e6; text-shadow: 0 1px 2px rgba(0,0,0,.3), 0 2px 22px rgba(0,0,0,.35); }
+.office .intro h1 { margin: 0; font: 500 clamp(34px, 4.4vw, 60px)/1 var(--serif); letter-spacing: -.012em; }
+.office .intro .tagline { margin: .35em 0 0; font: italic clamp(16px, 1.45vw, 21px)/1.25 var(--serif); color: rgba(251,243,230,.86); }
+.office .intro .now { margin: .9em 0 0; font-size: clamp(14px, 1.05vw, 16px); line-height: 1.4; color: rgba(251,243,230,.92); }
+.office .intro .now a { color: #fff; font-weight: 650; text-decoration: underline; text-decoration-color: var(--vermilion-hi);
+                        text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.office .intro nav ul { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 14px 0 0; padding: 0; list-style: none; }
+.office .intro nav a, .office .intro .projects-btn { display: inline-block; padding: 6px 0; font: 600 12px/1.2 var(--sans); letter-spacing: .1em;
+                   text-transform: uppercase; color: rgba(251,243,230,.88); text-decoration: none; text-shadow: inherit; }
+.office .intro .projects-btn { border: 0; background: none; cursor: pointer; color: #fff; }
+.office .intro nav a:hover, .office .intro .projects-btn:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+.office .intro :focus-visible { outline: 2px solid #fbf3e6; outline-offset: 3px; border-radius: 2px; }
+
+/* Projects: a page from a museum exhibition catalogue on cream card stock, in three tiers: now building (a large entry
+   with its miniature), selected work (numbered exhibits, each a small painted miniature on a plinth) and the archive
+   (typed index cards with a faded rubber stamp). Paper grain, the hairline frame, the cards and the stamps are CSS and
+   SVG; the miniatures are the only images. The page scrolls inside the dialog; the close button stays put. */
+.office #projects { --card: #f4ecdc; --rule: rgba(92,66,40,.2); --vermilion: #c8442a; --typed: #6d6259;
+                    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .27 0 0 0 0 .17 .16 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+                    --ink-wear: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 3.2 0 0 0 -.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E");
+                    width: min(860px, calc(100vw - 24px)); max-width: none; max-height: min(calc(100svh - 28px), 980px);
+                    margin: auto; padding: 0; border: 0; border-radius: 3px; overflow: hidden;
+                    color: var(--ink); font: 15px/1.4 var(--sans);
+                    background: var(--grain), radial-gradient(130% 90% at 45% 25%, #f8f2e5, var(--card) 60%, #ece1cb);
+                    box-shadow: 0 28px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(70,48,26,.22); }
+.office #projects[open] { display: flex; flex-direction: column; animation: office-rise .22s ease-out; }
+.office #projects::backdrop { background: rgba(14,10,7,.55); }
+.office #projects[open]::backdrop { animation: office-fade .22s ease-out; }
+@keyframes office-rise { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }
+@keyframes office-fade { from { opacity: 0; } to { opacity: 1; } }
+.office #projects .sheet { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; container-type: inline-size; }
+.office #projects .page { position: relative; padding: 24px 44px 26px; }
+.office #projects .page::before { content: ""; position: absolute; inset: 9px; border: 1px solid var(--rule); pointer-events: none; }
+.office #projects .close { position: absolute; z-index: 3; top: 14px; right: 14px; width: 38px; height: 38px; border: 0; border-radius: 50%;
+                           background: rgba(244,236,220,.92); font: 26px/1 var(--serif); color: var(--ink); cursor: pointer; }
+.office #projects .close:hover { background: rgba(214,196,168,.6); }
+.office #projects :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.office #projects h2, .office #projects h3, .office #projects h4, .office #projects p { margin: 0; }
+.office #projects a { color: inherit; }
+.office .cat-kicker { font: 700 11.5px/1.2 var(--serif); letter-spacing: .2em; text-transform: uppercase; }
+.office #projects h2 { margin: 4px 44px 0 0; font: 500 clamp(28px, 4.6cqi, 36px)/1.1 var(--serif); letter-spacing: -.01em; }
+.office .tier { padding: 16px 0 0; }
+.office .tier + .tier { margin-top: 16px; border-top: 1px solid var(--rule); }
+.office .tier-label { font: 700 12px/1.2 var(--serif); letter-spacing: .24em; text-transform: uppercase; }
+.office .mini { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3;
+                filter: drop-shadow(0 7px 7px rgba(70,46,22,.22)) drop-shadow(0 1px 1px rgba(70,46,22,.25)); }
+/* tier 1: the large entry, the miniature left of a hairline, the words right */
+.office .now-entry { display: grid; grid-template-columns: minmax(0, 37%) minmax(0, 1fr); align-items: center; }
+.office .now-entry .mini { padding-right: 22px; }
+.office .now-entry .words { padding: 6px 0 6px 28px; border-left: 1px solid var(--rule); }
+.office .now-entry .tier-label { color: var(--vermilion); }
+.office .now-entry h4 { margin: 8px 0 6px; font: 500 clamp(30px, 5cqi, 40px)/1.05 var(--serif); letter-spacing: -.01em; }
+.office .now-entry p { font: 16px/1.5 var(--serif); }
+.office a.cta { display: inline-block; margin-top: 16px; padding: 10px 16px; border-radius: 5px; background: var(--vermilion);
+                color: #fff; font: 600 16px/1.2 var(--serif); text-decoration: none; box-shadow: 0 1px 0 rgba(110,30,14,.35); }
+.office #projects a.cta { color: #fff; }
+.office a.cta:hover { background: #ad3820; }
+/* tier 2: numbered exhibits, newest first; the title's link covers the whole exhibit */
+.office .exhibits { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 6px 0 0; padding: 0; list-style: none; }
+.office .exhibit { position: relative; display: flex; flex-direction: column; align-items: center; padding: 0 16px; text-align: center; }
+.office .exhibit + .exhibit { border-left: 1px solid var(--rule); }
+.office .exhibit .mini { max-width: 188px; margin-bottom: 4px; }
+.office .exhibit:hover .mini { translate: 0 -2px; }
+.office .exhibit .no { font: italic 14px/1.2 var(--serif); color: var(--muted-ink); }
+.office .exhibit h4 { margin: 3px 0 1px; font: 600 21px/1.15 var(--serif); }
+.office .exhibit h4 a { text-decoration: none; }
+.office .exhibit h4 a::after { content: ""; position: absolute; inset: 0; }
+.office .exhibit h4 a:hover, .office .exhibit h4 a:focus-visible { text-decoration: underline; text-decoration-color: var(--vermilion); text-underline-offset: 4px; }
+.office .exhibit .year { font: 15px/1.3 var(--serif); }
+.office .exhibit .line { margin-top: 6px; font: 13.5px/1.4 var(--serif); color: var(--muted-ink); }
+.office .exhibit .line, .office .exhibit .award, .office .now-entry p { text-wrap: balance; }
+.office .exhibit .award { margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--rule); font: italic 12.5px/1.35 var(--serif); color: #9d3a22; }
+.office .exhibit .demo { position: relative; z-index: 1; margin-top: 6px; font: 600 12.5px/1.3 var(--sans); letter-spacing: .02em;
+                         text-decoration: underline; text-decoration-color: rgba(200,68,42,.5); text-underline-offset: 3px; }
+.office .exhibit .demo:hover { text-decoration-color: var(--vermilion); }
+/* tier 3: typed index cards in lighter ink, overlapping a little like cards in a drawer, each with a faded stamp */
+.office .cards { display: flex; margin: 14px 0 0; padding: 0 0 6px 4px; list-style: none; }
+.office .card { position: relative; flex: 1 1 0; min-width: 0; min-height: 100px; padding: 30px 18px 14px; border-radius: 2px;
+                background: linear-gradient(to bottom, transparent 22px, rgba(200,68,42,.22) 22px 23px, transparent 23px), var(--grain), #f9f4e9;
+                box-shadow: 0 1px 1px rgba(60,40,20,.18), 0 6px 16px rgba(60,40,20,.16);
+                font-family: "American Typewriter", "Courier Prime", "Courier New", ui-monospace, monospace; color: var(--typed); }
+.office .card + .card { margin-left: -14px; }
+.office .card:nth-child(3n+1) { rotate: -1.6deg; }
+.office .card:nth-child(3n+2) { rotate: 1.1deg; translate: 0 -3px; }
+.office .card:nth-child(3n) { rotate: -.6deg; translate: 0 2px; }
+.office .card:hover, .office .card:focus-within { z-index: 1; }
+.office .card .typed { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 10px; font-size: 14.5px; line-height: 1.3; }
+.office .card a { text-decoration: none; }
+.office .card a::after { content: ""; position: absolute; inset: 0; }
+.office .card a:hover, .office .card a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+.office .stamp { position: absolute; right: 18px; bottom: 14px; padding: 3px 8px 2px; border: 2px solid currentColor; border-radius: 3px;
+                 color: rgba(200,68,42,.62); font: 700 12.5px/1.2 var(--sans); letter-spacing: .16em; text-transform: uppercase; rotate: -8deg;
+                 mix-blend-mode: multiply; pointer-events: none;
+                 -webkit-mask-image: var(--ink-wear); mask-image: var(--ink-wear); -webkit-mask-size: 90px 90px; mask-size: 90px 90px; }
+/* narrow (phones): the tiers stack, the exhibits become one column of rows, the cards a short overlapping stack */
+@container (max-width: 600px) {
+  .office #projects .page { padding: 26px 22px 30px; }
+  .office .now-entry { grid-template-columns: minmax(0, 1fr); }
+  .office .now-entry .mini { max-width: 240px; margin: 6px auto 0; padding: 0; }
+  .office .now-entry .words { padding: 14px 0 0; border: 0; border-top: 1px solid var(--rule); }
+  .office .exhibits { grid-template-columns: minmax(0, 1fr); }
+  .office .exhibit { display: grid; grid-template-columns: 112px minmax(0, 1fr); column-gap: 14px; align-items: center; padding: 14px 0; text-align: left; }
+  .office .exhibit + .exhibit { border-left: 0; border-top: 1px solid var(--rule); }
+  .office .exhibit .mini { grid-row: 1 / span 8; margin: 0; align-self: start; }
+  .office .exhibit h4 { font-size: 19px; }
+  .office .cards { flex-direction: column; padding: 0 4px 6px; }
+  .office .card { flex: none; min-height: 96px; }
+  .office .card + .card { margin: -10px 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .office .spot, .office #stage.lit .spot { transition: none; }
+  .office #stage.lit #thought-wrap > img:nth-of-type(n), .office #projects[open], .office #projects[open]::backdrop { animation: none; }
+}
