@@ -94,6 +94,28 @@
 .office #stage.lit #thought-wrap > img:nth-of-type(1) { animation: office-appear 1ms steps(1, end) .125s both; }
 .office #stage.lit #thought-wrap > img:nth-of-type(2) { animation: office-appear 1ms steps(1, end) .25s both; }
 .office #stage.lit #thought-wrap > img:nth-of-type(3) { animation: office-appear 1ms steps(1, end) .375s both; }
+/* The nudge (scene.ts): until he's found, the bubble pops up now and then without the spotlight, one piece per tick
+   (data-tease 1, 2, 3), the cloud landing with a one-frame overshoot, and while it's up it's clickable. If the spotlight
+   comes on mid-nudge, the pieces already up stay put and only the rest step in. */
+.office #stage[data-tease] #thought-wrap { visibility: visible; }
+.office #stage[data-tease="1"] #thought-wrap > img:nth-of-type(1),
+.office #stage[data-tease="2"] #thought-wrap > img:nth-of-type(-n+2),
+.office #stage[data-tease="3"] #thought-wrap > img { opacity: 1; animation: none; }
+.office #stage[data-tease="3"]:not(.lit) #thought-wrap > img:nth-of-type(3) { transform-origin: 0 100%; animation: office-pop .25s steps(2, jump-none) both; }
+@keyframes office-pop { from { scale: 1.08; } to { scale: 1; } }
+.office #stage[data-tease="3"] #thought { visibility: visible; }
+/* The bubble is the thing to click, lit or nudging, so it glows: warm light around the felt, sized with the stage. */
+.office #thought-wrap > img { filter: drop-shadow(0 0 calc(2px * var(--s)) rgba(255,226,170,.95))
+                                      drop-shadow(0 0 calc(8px * var(--s)) rgba(255,182,96,.75)); }
+/* The glow (scene.ts): soft warm light in the spotlight's own circle, screen-blended so it lights what it falls on,
+   pulsing gently in 8 fps steps while the spotlight is off, the way a game marks what you can interact with, and gives
+   way to the spotlight. With reduced motion it holds still. */
+.office #spot-glow { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+                     background: radial-gradient(ellipse calc(var(--rx) * .62) calc(var(--ry) * .62) at var(--cx) var(--cy),
+                       rgba(255,178,92,.66) 0%, rgba(255,168,86,.42) 40%, rgba(255,158,78,.14) 72%, rgba(255,150,70,0) 100%);
+                     animation: office-glow 2s steps(16, jump-none) infinite alternate; }
+.office #stage.lit #spot-glow { animation: none; opacity: 0; }
+@keyframes office-glow { from { opacity: .4; } to { opacity: 1; } }
 
 /* Who he is, set straight on the photograph's out-of-focus foreground (bottom left), held up by a soft scrim */
 .office .scrim { position: fixed; inset: auto 0 0 0; height: min(58svh, 460px); z-index: 4; pointer-events: none;
@@ -216,4 +238,5 @@
 @media (prefers-reduced-motion: reduce) {
   .office .spot, .office #stage.lit .spot { transition: none; }
   .office #stage.lit #thought-wrap > img:nth-of-type(n), .office #projects[open], .office #projects[open]::backdrop { animation: none; }
+  .office #spot-glow { animation: none; opacity: .7; }
 }
