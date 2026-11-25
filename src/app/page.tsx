@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { projects, type Project, type ProjectTier } from "@/data/projects";
 import { OfficeScene } from "@/components/office/OfficeScene";
@@ -16,6 +17,8 @@ const COPY = {
 } as const;
 
 const ROOT_ID = "office";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 /** Newest first within a tier; projects of the same year keep the source's order. */
 function inTier(tier: ProjectTier): Project[] {
