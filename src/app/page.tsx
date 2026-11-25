@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { projects, type Project, type ProjectTier } from "@/data/projects";
 import { OfficeScene } from "@/components/office/OfficeScene";
 import geometry from "../../public/office/geometry.json";
@@ -14,6 +13,7 @@ const COPY = {
   stamp: "Archived",
   number: "No.",
   close: "Close projects",
+  newTab: " (opens in a new tab)",
 } as const;
 
 const ROOT_ID = "office";
@@ -43,27 +43,22 @@ function oneLine(project: Project): string {
   return `${project.description.split(/:\s| — |\.\s/)[0].replace(/\.$/, "")}.`;
 }
 
-function ProjectLink({ project, className, children }: { project: Project; className?: string; children: React.ReactNode }) {
-  if (project.external) {
-    return (
-      <a href={project.link} className={className}>
-        {children}
-      </a>
-    );
-  }
+/** Every link out of the page opens in a new tab, so the office stays where the visitor left it. */
+function Out({ href, className, children }: { href: string; className?: string; children: React.ReactNode }) {
   return (
-    <Link href={`/projects/${project.slug}`} className={className}>
+    <a href={href} className={className} target="_blank" rel="noopener noreferrer">
       {children}
-    </Link>
+      <span className="vh">{COPY.newTab}</span>
+    </a>
   );
 }
 
 function Miniature({ project }: { project: Project }) {
   if (!project.miniature) return null;
-  // A plain <img>: the file is a pre-sized WebP in public/office/, loaded relative to this page so it works under any
-  // base path (next/image would need the base path spelled out).
+  // A plain <img>: the file is a pre-sized WebP in public/office/. Lazy, so the catalogue's miniatures load when it opens
+  // instead of competing with the plate on first load.
   // eslint-disable-next-line @next/next/no-img-element
-  return <img className="mini" src={project.miniature.src} alt={project.miniature.alt} width={720} height={540} decoding="async" />;
+  return <img className="mini" src={project.miniature.src} alt={project.miniature.alt} width={720} height={540} loading="lazy" decoding="async" />;
 }
 
 const Arrow = () => <span aria-hidden="true">→</span>;
@@ -85,7 +80,7 @@ export default function Home() {
         <h1>Joseph Wibowo</h1>
         <p className="tagline">Builder overwhelmed at the possibilities</p>
         <p className="now">
-          Building <a href={stoke.link}>{stoke.title}</a>, a personal finance&nbsp;app.
+          Building <Out href={stoke.link}>{stoke.title}</Out>, a personal finance&nbsp;app.
         </p>
         <nav aria-label="Elsewhere">
           <ul>
@@ -95,13 +90,13 @@ export default function Home() {
               </button>
             </li>
             <li>
-              <a href="https://github.com/josephwibowo" rel="me">
-                GitHub
+              <a href="https://github.com/josephwibowo" rel="me noopener" target="_blank">
+                GitHub<span className="vh">{COPY.newTab}</span>
               </a>
             </li>
             <li>
-              <a href="https://linkedin.com/in/josephwibowo" rel="me">
-                LinkedIn
+              <a href="https://linkedin.com/in/josephwibowo" rel="me noopener" target="_blank">
+                LinkedIn<span className="vh">{COPY.newTab}</span>
               </a>
             </li>
           </ul>
@@ -134,9 +129,9 @@ export default function Home() {
                     </h3>
                     <h4>{p.title}</h4>
                     <p>{p.description}</p>
-                    <a className="cta" href={p.link}>
+                    <Out className="cta" href={p.link}>
                       {p.linkLabel ?? `Visit ${p.title}`} <Arrow />
-                    </a>
+                    </Out>
                   </div>
                 </div>
               ))}
@@ -152,16 +147,20 @@ export default function Home() {
                     <Miniature project={p} />
                     <p className="no">{catalogueNumber(p)}</p>
                     <h4>
-                      <ProjectLink project={p}>{p.title}</ProjectLink>
+                      <Out href={p.link}>{p.title}</Out>
                     </h4>
                     <p className="year">{p.year}</p>
                     <p className="line">{oneLine(p)}</p>
-                    {p.award && <p className="award">{p.award}</p>}
+                    {p.award && (
+                      <p className="award">
+                        <Out href={p.award.href}>{p.award.text}</Out>
+                      </p>
+                    )}
                     {p.demo && (
-                      <a className="demo" href={p.demo}>
+                      <Out className="demo" href={p.demo}>
                         {COPY.demo}
                         <span className="vh">: {p.title}</span> <Arrow />
-                      </a>
+                      </Out>
                     )}
                   </li>
                 ))}
@@ -176,7 +175,7 @@ export default function Home() {
                 {archive.map((p) => (
                   <li className="card" key={p.slug}>
                     <p className="typed">
-                      <ProjectLink project={p}>{p.title}</ProjectLink>
+                      <Out href={p.link}>{p.title}</Out>
                       <span className="year">{p.year}</span>
                     </p>
                     <span className="stamp">{COPY.stamp}</span>

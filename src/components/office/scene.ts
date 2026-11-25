@@ -65,9 +65,10 @@ interface LayerController {
  * aborts, which removes everything it added and every listener.
  */
 export async function startOffice(root: HTMLElement, base: URL, signal: AbortSignal): Promise<void> {
-  const response = await fetch(new URL("geometry.json", base), { signal });
-  if (!response.ok) throw new Error(`office geometry: ${response.status} ${response.statusText} for ${response.url}`);
-  const G = (await response.json()) as Geometry;
+  const plate = required(root, "#plate") as HTMLImageElement;
+  const [G] = await Promise.all([loadGeometry(base, signal), settled(plate)]);
+  // The ~55 frame images are requested only now, after the plate (the first paint) has arrived, so they never compete
+  // with it for bandwidth.
   if (signal.aborted) return;
 
   const stage = required(root, "#stage");
@@ -511,6 +512,22 @@ export async function startOffice(root: HTMLElement, base: URL, signal: AbortSig
     down = null;
     viewport.classList.remove("dragging");
     window.setTimeout(() => (dragged = false), 0);
+  });
+}
+
+async function loadGeometry(base: URL, signal: AbortSignal): Promise<Geometry> {
+  const response = await fetch(new URL("geometry.json", base), { signal });
+  if (!response.ok) throw new Error(`office geometry: ${response.status} ${response.statusText} for ${response.url}`);
+  return (await response.json()) as Geometry;
+}
+
+/** Resolves once the image has loaded or failed; a failed plate is already reported by the browser, and the scene still
+ * runs over whatever is there. */
+function settled(image: HTMLImageElement): Promise<void> {
+  if (image.complete) return Promise.resolve();
+  return new Promise((resolve) => {
+    image.addEventListener("load", () => resolve(), { once: true });
+    image.addEventListener("error", () => resolve(), { once: true });
   });
 }
 
