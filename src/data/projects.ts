@@ -4,24 +4,22 @@ export type ProjectTier = "current" | "selected" | "archive";
 export interface Project {
     title: string;
     description: string;
-    tags: string[];
+    /** Where the project lives: its site, repository or write-up. Opens in a new tab. */
     link: string;
+    /** The call to action for the current project's link. */
     linkLabel?: string;
-    image?: string | {
-        src: string;
-        alt: string;
-        width: number;
-        height: number;
-    };
-    external?: boolean;
+    /** A stable id for the project. */
     slug: string;
     /** The year the project started. */
     year: number;
     tier: ProjectTier;
     /** A short recorded demo of the project. */
     demo?: string;
-    /** A prize or recognition, as one line. */
-    award?: string;
+    /** A prize or recognition, as one line, and where it was announced. */
+    award?: {
+        text: string;
+        href: string;
+    };
     /**
      * The painted miniature the home page's catalogue shows for this project. `src` is relative to the site root
      * (no leading slash), because the home page loads it relative to itself and so works under any base path.
@@ -36,15 +34,8 @@ export const projects: Project[] = [
     {
         title: "Stoke Money",
         description: "A personal finance app for seeing where your money went, what changed, and which bills are coming up.",
-        tags: ["Personal Finance", "iOS"],
         link: "https://www.stokemoney.com/#app",
         linkLabel: "Join the waitlist",
-        image: {
-            src: "/images/stoke-money-preview.jpg",
-            alt: "Stoke Money’s sample transaction ledger with its illustrated companion and row punch",
-            width: 1200,
-            height: 630,
-        },
         slug: "stoke",
         miniature: {
             src: "office/assets/catalogue-stoke-greenhouse.v1.webp",
@@ -56,9 +47,7 @@ export const projects: Project[] = [
     {
         title: "Cascade",
         description: "An Airflow plugin that runs an API deprecation as a program: one mapped task per account, human-in-the-loop exceptions, and migrations verified by telemetry.",
-        tags: ["Airflow", "Python", "React", "LLM"],
         link: "https://github.com/josephwibowo/cascade",
-        external: true,
         slug: "cascade",
         miniature: {
             src: "office/assets/catalogue-cascade.v1.webp",
@@ -67,15 +56,15 @@ export const projects: Project[] = [
         year: 2026,
         tier: "selected",
         demo: "https://youtu.be/zLX3AQpTZR0",
-        award: "Winner · Astronomer’s Beyond the DAG hackathon, 2026",
+        award: {
+            text: "Winner · Astronomer’s Beyond the DAG hackathon, 2026",
+            href: "https://www.astronomer.io/blog/beyond-the-dag-hackathon-meet-the-winners/",
+        },
     },
     {
         title: "The Bus Factor",
         description: "An interactive exploration of the bus factor — how concentrated knowledge in a team becomes a single point of failure.",
-        tags: ["Interactive", "Essay"],
         link: "https://josephwibowo.github.io/the-bus-factor/",
-        image: "/images/the-bus-factor.png",
-        external: true,
         slug: "the-bus-factor",
         miniature: {
             src: "office/assets/catalogue-bus-factor.v1.webp",
@@ -87,9 +76,7 @@ export const projects: Project[] = [
     {
         title: "Mantora",
         description: "A local-first MCP observer: lightweight UI + proxy for inspecting LLM data access with protective defaults. Sits between Claude/Cursor and target MCP servers.",
-        tags: ["MCP", "LLM", "Python", "Security", "SQLite"],
         link: "https://github.com/josephwibowo/mantora-mcp",
-        image: "/images/mantora_demo.gif",
         slug: "mantora",
         miniature: {
             src: "office/assets/catalogue-mantora.v1.webp",
@@ -101,9 +88,7 @@ export const projects: Project[] = [
     {
         title: "CloudyCam",
         description: "A Nest camera recorder built in Python. Uses WebSockets to capture and stream video feeds.",
-        tags: ["Python", "WebSockets", "Streaming", "FFmpeg"],
         link: "https://github.com/josephwibowo/CloudyCam",
-        image: "/images/cloudycam.gif",
         slug: "cloudycam",
         year: 2022,
         tier: "archive",
@@ -111,9 +96,7 @@ export const projects: Project[] = [
     {
         title: "Predicting Closures",
         description: "Machine learning model to predict restaurant closures using movement trends and Yelp data during COVID-19.",
-        tags: ["Machine Learning", "Python", "D3.js", "Data Science"],
-        link: "#",
-        image: "/images/poster.jpg",
+        link: "/reports/predicting-closures.pdf",
         slug: "predicting-closures",
         year: 2020,
         tier: "archive",
@@ -121,9 +104,7 @@ export const projects: Project[] = [
     {
         title: "Meetup Analytics",
         description: "End-to-end analytics pipeline for Meetup.com data. ETL orchestration with Airflow and visualization with D3.js.",
-        tags: ["Airflow", "ETL", "Python", "D3.js", "Docker"],
-        link: "/projects/meetup-analytics/dashboard",
-        image: "/images/dashboard-min.gif",
+        link: "https://github.com/josephwibowo/MeetBaeArea",
         slug: "meetup-analytics",
         year: 2018,
         tier: "archive",
