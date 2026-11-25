@@ -3,9 +3,10 @@
  * stop-motion cinemagraph. Pose patches, sprites and screen overlays are swapped on a fixed tick from a precomputed
  * timeline in public/office/geometry.json (built by the art-direction kit in direction/office-scene/kit/).
  *
- * At rest (tick 0, reduced motion, a hidden tab) the page is exactly the still. Joseph is the only interactive figure:
- * pointing at, focusing or tapping him dims the scene to a spotlight and raises a felt thought bubble, which opens the
- * projects dialog.
+ * At rest (tick 0, reduced motion, a hidden tab) the page is the still, plus the glow below, held steady under reduced
+ * motion. Joseph is the only interactive figure: pointing at, focusing or tapping him dims the scene to a spotlight and
+ * raises a felt thought bubble, which opens the projects dialog. To say so, a soft warm glow pulses in the spotlight's
+ * circle while it's off, and until the visitor first finds him, the bubble pops up over his head on its own a few times.
  */
 
 type Box = readonly [x: number, y: number, w: number, h: number];
@@ -238,6 +239,41 @@ export async function startOffice(root: HTMLElement, base: URL, signal: AbortSig
   };
   const toRest = () => applyState(G.rest);
   let tick = 0;
+  // The nudge: his thought bubble pops up over his head without the spotlight (a ball, a ball, the cloud, a tick each),
+  // holds, and goes back the same way: the scene's own version of the marker over a character a game wants you to talk
+  // to. While the cloud is up it is the button it is when lit. Three plays a visit, each under WCAG's 5 s limit for
+  // motion that starts by itself, and none once the spotlight has been on him: a cue repeated for ever turns to noise.
+  const NUDGE = { gaps: [24, 64, 112], hold: 20 }; // ticks before each play (3 s in, then 8 s and 14 s after the last)
+  let found = false;
+  let plays = 0;
+  let wait = NUDGE.gaps[0];
+  let phase = -1; // the tick within the current play; -1 between plays
+  const tease = (level: number) => {
+    const v = level ? String(level) : undefined;
+    if (stage.dataset.tease === v) return;
+    if (v) stage.dataset.tease = v;
+    else delete stage.dataset.tease;
+  };
+  const endPlay = () => {
+    phase = -1;
+    wait = NUDGE.gaps[plays] ?? 0;
+  };
+  const nudgeStep = () => {
+    if (found) {
+      if (!stage.classList.contains("lit")) tease(0); // lit, whatever it already shows stays put while the rest joins
+      return;
+    }
+    if (phase < 0) {
+      if (plays >= NUDGE.gaps.length || --wait > 0) return;
+      phase = 0;
+      plays++;
+    }
+    const p = phase++;
+    const h = NUDGE.hold;
+    tease(p < 1 ? 1 : p < 2 ? 2 : p < 2 + h ? 3 : p < 3 + h ? 2 : p < 4 + h ? 1 : 0);
+    if (p >= 4 + h) endPlay();
+  };
+  signal.addEventListener("abort", () => delete stage.dataset.tease);
   // the glow flickers in 8 fps steps like everything else (a random walk toward a new target), off at rest
   let glowV = 0.5;
   let glowT = 0.5;
@@ -253,6 +289,7 @@ export async function startOffice(root: HTMLElement, base: URL, signal: AbortSig
     if (t === 0) toRest();
     byTick.get(t)?.forEach(applyState);
     glowStep();
+    nudgeStep();
     tick++;
   };
 
@@ -278,6 +315,8 @@ export async function startOffice(root: HTMLElement, base: URL, signal: AbortSig
     raf = 0;
     tick = 0;
     toRest();
+    tease(0);
+    if (phase >= 0) endPlay(); // a play cut short by a hidden tab still counts
     glowOn = 0;
     setGlow(0.5, 0);
   };
@@ -295,6 +334,9 @@ export async function startOffice(root: HTMLElement, base: URL, signal: AbortSig
   stage.style.setProperty("--cy", pct(J.spot.y, H));
   stage.style.setProperty("--rx", pct(J.spot.r, W));
   stage.style.setProperty("--ry", pct(J.spot.r, H)); // a circle on screen
+  // the glow: soft warm light in the spotlight's circle, pulsing while the spotlight is off, to say he answers (office.css)
+  const spotGlow = add(stage, document.createElement("div"));
+  spotGlow.id = "spot-glow";
   const spotDim = add(stage, document.createElement("div"));
   spotDim.id = "spot-dim";
   spotDim.className = "spot";
@@ -340,6 +382,7 @@ export async function startOffice(root: HTMLElement, base: URL, signal: AbortSig
     const shown = dlg.open ? lit : !dismissed && (pinned || hover || kbFocus);
     if (shown === lit) return;
     lit = shown;
+    if (shown) found = true;
     stage.classList.toggle("lit", shown);
     jb.setAttribute("aria-expanded", String(shown));
   };
