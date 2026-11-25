@@ -80,7 +80,7 @@ export default function Home() {
       <div className="scrim" aria-hidden="true" />
       <header className="intro">
         <h1>Joseph Wibowo</h1>
-        <p className="tagline">AI-Native Data Engineering</p>
+        <p className="tagline">Builder overwhelmed at the possibilities</p>
         <p className="now">
           Building <a href={stoke.link}>{stoke.title}</a>, a personal finance&nbsp;app.
         </p>
