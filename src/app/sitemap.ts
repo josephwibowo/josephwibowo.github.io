@@ -13,14 +13,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const projectRoutes = projects
         .filter((project) => !project.external)
         .map((project) => ({
-            url: `${baseUrl}/projects/${project.slug}/`,
+            url: `${baseUrl}/projects/${project.slug}`,
             changeFrequency: 'monthly' as const,
             priority: PRIORITY[project.tier],
         }));
 
     return [
-        { url: `${baseUrl}/`, changeFrequency: 'monthly', priority: 1 },
+        { url: baseUrl, changeFrequency: 'monthly', priority: 1 },
         ...projectRoutes,
-        { url: `${baseUrl}/projects/meetup-analytics/dashboard/`, changeFrequency: 'yearly', priority: 0.3 },
+        { url: `${baseUrl}/projects/meetup-analytics/dashboard`, changeFrequency: 'yearly', priority: 0.3 },
     ];
 }
